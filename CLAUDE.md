@@ -8,21 +8,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Current state (read first)
 
-The repo is **not scaffolded yet** — there is no `package.json`, no `app/`, no source code. What exists today is a Claude Code starter kit: the PRD, modular rules, and phased implementation prompts. The authoritative spec/rule files live nested under:
+The repo is **not scaffolded yet** — there is no `package.json`, no `app/`, no source code. What exists today is a Claude Code starter kit: the PRD, modular rules, and phased implementation prompts. The authoritative spec/rule files live at the repo root:
 
 ```
-files/splitbro_claude_code_starter/splitbro/
-  ├── docs/PRD_SplitBro.md          ← full spec (single source of truth)
-  ├── .claude/rules/
-  │     ├── calculation-engine.md   ← exact calc algorithm — implement verbatim
-  │     ├── firestore-schema.md     ← data model
-  │     └── conventions.md          ← naming, folders, i18n, currency
-  └── prompts/                      ← phase prompts 1A → 1E, run in order
+docs/PRD_SplitBro.md          ← full spec (single source of truth)
+.claude/rules/
+  ├── calculation-engine.md   ← exact calc algorithm — implement verbatim
+  ├── firestore-schema.md     ← data model
+  └── conventions.md          ← naming, folders, i18n, currency
+prompts/                      ← phase prompts 1A → 1E, run in order
 ```
 
 `Docs/*.xlsx` at the repo root are the real-world reference bills (Kediri = equal mode, Gempol = item mode) the calculation logic was derived from.
 
-**Before implementing any feature, read `docs/PRD_SplitBro.md` and the relevant rule file.** Do not invent requirements that aren't in the PRD — if unsure, ask. When scaffolding starts (phase 1A), confirm with the user where the Next.js app root should live relative to these nested spec files.
+**Before implementing any feature, read `docs/PRD_SplitBro.md` and the relevant rule file.** Do not invent requirements that aren't in the PRD — if unsure, ask.
 
 ## Tech stack (fixed — do not swap without approval)
 
@@ -30,7 +29,7 @@ Next.js (App Router) + TypeScript (strict) + Tailwind · Firestore (NoSQL) · Fi
 
 ## Commands
 
-The project isn't scaffolded, so no build tooling exists yet. Once phase 1A creates the Next.js app, the standard scripts apply: `npm run dev` (local), `npm run build`, `npm run lint`, and **`npx tsc --noEmit` for the type check that must pass after every code change**. Firebase config comes from `.env.local` (copy from the starter's `.env.example`, fill `NEXT_PUBLIC_FIREBASE_*`). Do not assume these exist until you've confirmed `package.json` is present.
+The project isn't scaffolded, so no build tooling exists yet. Once phase 1A creates the Next.js app, the standard scripts apply: `npm run dev` (local), `npm run build`, `npm run lint`, and **`npx tsc --noEmit` for the type check that must pass after every code change**. Firebase config comes from `.env.local` (copy from `.env.example` at the repo root, fill `NEXT_PUBLIC_FIREBASE_*`). Do not assume these exist until you've confirmed `package.json` is present.
 
 ## Non-negotiable invariants
 
