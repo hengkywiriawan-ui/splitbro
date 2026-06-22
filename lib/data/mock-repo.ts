@@ -1,4 +1,4 @@
-import type { Session, NewSessionInput } from "@/lib/types";
+import type { Session, NewSessionInput, SessionPatch } from "@/lib/types";
 import { EMPTY_PAYMENT_INFO } from "@/lib/types";
 import type { SessionRepository } from "./types";
 
@@ -57,12 +57,13 @@ export const mockRepo: SessionRepository = {
     return session;
   },
 
-  async update(id, patch) {
+  async update(id, patch: SessionPatch) {
     const all = readAll();
     const idx = all.findIndex((s) => s.id === id);
     if (idx === -1) return;
     // Immutable fields are stripped: id, adminId, mode, shareToken, createdAt.
-    const { id: _id, adminId: _admin, mode: _mode, shareToken: _tok, createdAt: _created, ...safe } = patch;
+    const raw = patch as Partial<Session>;
+    const { id: _id, adminId: _admin, mode: _mode, shareToken: _tok, createdAt: _created, ...safe } = raw;
     void _id; void _admin; void _mode; void _tok; void _created;
     all[idx] = { ...all[idx], ...safe, updatedAt: Date.now() };
     writeAll(all);

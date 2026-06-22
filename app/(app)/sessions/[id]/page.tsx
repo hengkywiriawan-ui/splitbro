@@ -24,7 +24,7 @@ function DetailInner({ id }: { id: string }) {
   }, [sessions, id]);
 
   if (loading) return null;
-  if (!session) return <p className="p-4">{t("common.back")}</p>;
+  if (!session) return <p className="p-4">{t("session.notFound")}</p>;
 
   return (
     <main className="mx-auto max-w-md p-4">

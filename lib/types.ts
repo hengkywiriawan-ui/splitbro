@@ -46,6 +46,8 @@ export interface NewSessionInput {
   defaultTaxRate?: number; // defaults to 11 in the repository
 }
 
+export type SessionPatch = Partial<Omit<Session, "id" | "adminId" | "mode" | "shareToken" | "createdAt">>;
+
 export const EMPTY_PAYMENT_INFO: PaymentInfo = {
   bankName: null,
   accountNumber: null,

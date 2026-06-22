@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { mockRepo } from "@/lib/data/mock-repo";
+import type { SessionPatch } from "@/lib/types";
 
 describe("mockRepo", () => {
   beforeEach(() => localStorage.clear());
@@ -31,7 +32,8 @@ describe("mockRepo", () => {
 
   it("updates the name and status but never the mode", async () => {
     const s = await mockRepo.create({ name: "Old", mode: "equal", adminId: "admin1" });
-    await mockRepo.update(s.id, { name: "New", status: "closed", mode: "item_based" });
+    // deliberately passes an out-of-contract field to verify defensive stripping
+    await mockRepo.update(s.id, { name: "New", status: "closed", mode: "item_based" } as unknown as SessionPatch);
     const updated = await mockRepo.get(s.id);
     expect(updated?.name).toBe("New");
     expect(updated?.status).toBe("closed");

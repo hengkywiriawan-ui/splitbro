@@ -29,6 +29,15 @@ describe("SessionForm (create)", () => {
     await userEvent.click(screen.getByRole("button", { name: /Simpan|Save/ }));
     expect(onSubmit).toHaveBeenCalledWith({ name: "Trip Kediri", mode: "equal", defaultTaxRate: 11 });
   });
+
+  it("defaults tax to 11 when the tax-rate input is cleared", async () => {
+    const { onSubmit } = renderForm();
+    await userEvent.type(screen.getByLabelText(/Nama sesi|Session name/), "Trip Malang");
+    await userEvent.click(screen.getByRole("radio", { name: /Bagi Rata|Equal Split/ }));
+    await userEvent.clear(screen.getByLabelText(/PPN|VAT/));
+    await userEvent.click(screen.getByRole("button", { name: /Simpan|Save/ }));
+    expect(onSubmit).toHaveBeenCalledWith({ name: "Trip Malang", mode: "equal", defaultTaxRate: 11 });
+  });
 });
 
 describe("SessionForm (edit)", () => {

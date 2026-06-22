@@ -23,7 +23,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
-    window.localStorage.setItem(LANG_KEY, l);
+    if (typeof window !== "undefined") window.localStorage.setItem(LANG_KEY, l);
   }, []);
 
   const t = useCallback((key: TranslationKey) => dictionaries[lang][key], [lang]);

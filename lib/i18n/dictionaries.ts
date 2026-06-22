@@ -36,6 +36,7 @@ export const dictionaries = {
     "session.status.close": "Tutup sesi",
     "session.status.reopen": "Buka lagi",
     "session.delete.confirm": "Hapus sesi ini? Tindakan tidak bisa dibatalkan.",
+    "session.notFound": "Sesi tidak ditemukan.",
   },
   en: {
     "app.title": "SplitBro",
@@ -72,6 +73,7 @@ export const dictionaries = {
     "session.status.close": "Close session",
     "session.status.reopen": "Reopen",
     "session.delete.confirm": "Delete this session? This cannot be undone.",
+    "session.notFound": "Session not found.",
   },
 } as const;
 

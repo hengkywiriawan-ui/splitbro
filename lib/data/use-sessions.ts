@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { NewSessionInput, Session } from "@/lib/types";
+import type { NewSessionInput, Session, SessionPatch } from "@/lib/types";
 import { getSessionRepo } from "./index";
 
 export function useSessions(adminId: string | null) {
@@ -9,12 +9,13 @@ export function useSessions(adminId: string | null) {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
+    const repo = getSessionRepo();
     if (!adminId) {
       setSessions([]);
       setLoading(false);
       return;
     }
-    const repo = getSessionRepo();
+    setLoading(true);
     setSessions(await repo.listByAdmin(adminId));
     setLoading(false);
   }, [adminId]);
@@ -34,7 +35,7 @@ export function useSessions(adminId: string | null) {
   );
 
   const update = useCallback(
-    async (id: string, patch: Partial<Session>) => {
+    async (id: string, patch: SessionPatch) => {
       const repo = getSessionRepo();
       await repo.update(id, patch);
       await refresh();

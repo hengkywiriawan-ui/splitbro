@@ -27,7 +27,7 @@ export function AuthProviderContext({ children }: { children: React.ReactNode })
         setLoading(false);
       }
     });
-    const off = auth.onAuthChange((u) => setUser(u));
+    const off = auth.onAuthChange((u) => { setUser(u); setLoading(false); });
     return () => {
       active = false;
       off();

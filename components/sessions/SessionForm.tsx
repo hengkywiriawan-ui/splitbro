@@ -27,7 +27,7 @@ export function SessionForm({
   const { t } = useT();
   const [name, setName] = useState(initial?.name ?? "");
   const [selectedMode, setSelectedMode] = useState<SessionMode | null>(initial?.mode ?? null);
-  const [taxRate, setTaxRate] = useState(initial?.defaultTaxRate ?? 11);
+  const [taxRate, setTaxRate] = useState(String(initial?.defaultTaxRate ?? 11));
   const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(e: React.FormEvent) {
@@ -41,7 +41,8 @@ export function SessionForm({
       return;
     }
     setError(null);
-    onSubmit({ name: name.trim(), mode: (initial?.mode ?? selectedMode) as SessionMode, defaultTaxRate: taxRate });
+    const parsedTax = parseInt(taxRate, 10);
+    onSubmit({ name: name.trim(), mode: (initial?.mode ?? selectedMode) as SessionMode, defaultTaxRate: Number.isNaN(parsedTax) ? 11 : parsedTax });
   }
 
   return (
@@ -65,7 +66,7 @@ export function SessionForm({
         <Input
           type="number"
           value={taxRate}
-          onChange={(e) => setTaxRate(Number(e.target.value))}
+          onChange={(e) => setTaxRate(e.target.value)}
           aria-label={t("session.field.taxRate")}
         />
       </label>
