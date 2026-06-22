@@ -6,8 +6,13 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
+    environmentOptions: {
+      jsdom: {
+        url: "http://localhost",
+      },
+    },
     globals: true,
-    setupFiles: ["./vitest.setup.ts"],
+    setupFiles: ["./vitest.setup.globals.ts", "./vitest.setup.ts"],
   },
   resolve: {
     alias: { "@": fileURLToPath(new URL("./", import.meta.url)) },
