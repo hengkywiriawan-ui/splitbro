@@ -4,5 +4,11 @@ import { cleanup } from "@testing-library/react";
 
 afterEach(() => {
   cleanup();
-  localStorage.clear();
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      window.localStorage.clear();
+    }
+  } catch {
+    // localStorage might not be available in some test environments
+  }
 });
