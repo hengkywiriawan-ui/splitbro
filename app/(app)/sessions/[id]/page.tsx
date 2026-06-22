@@ -1,47 +1,77 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { useAuth } from "@/lib/auth/provider";
 import { useT } from "@/lib/i18n/provider";
-import { useSessions } from "@/lib/data/use-sessions";
+import { useSession } from "@/lib/data/use-session";
+import { useRestaurants } from "@/lib/data/use-restaurants";
+import { getSessionRepo } from "@/lib/data/index";
 import { SessionForm } from "@/components/sessions/SessionForm";
 import { DeleteConfirm } from "@/components/sessions/DeleteConfirm";
 import { Button } from "@/components/ui/Button";
-import type { Session } from "@/lib/types";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 
-function DetailInner({ id }: { id: string }) {
+function HubInner({ id }: { id: string }) {
   const { user } = useAuth();
   const { t } = useT();
   const router = useRouter();
-  const { sessions, loading, update, remove } = useSessions(user?.uid ?? null);
+  const { session, loading, update } = useSession(id, user?.uid ?? null);
+  const { restaurants } = useRestaurants(id);
   const [confirming, setConfirming] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
-
-  useEffect(() => {
-    setSession(sessions.find((s) => s.id === id) ?? null);
-  }, [sessions, id]);
 
   if (loading) return null;
   if (!session) return <p className="p-4">{t("session.notFound")}</p>;
 
   return (
     <main className="mx-auto max-w-md p-4">
-      <h1 className="mb-4 text-xl font-bold">{t("session.edit.title")}</h1>
+      <Link href="/sessions" className="mb-4 inline-block text-sm text-blue-600">
+        ← {t("common.back")}
+      </Link>
+
+      <div className="mb-4 flex items-center gap-2">
+        <h1 className="text-xl font-bold">{session.name}</h1>
+        <Badge tone={session.status === "active" ? "green" : "gray"}>
+          {t(session.status === "active" ? "session.status.active" : "session.status.closed")}
+        </Badge>
+      </div>
+
       <SessionForm
         mode="edit"
         initial={{ name: session.name, mode: session.mode, defaultTaxRate: session.defaultTaxRate }}
-        onCancel={() => router.push("/sessions")}
         onSubmit={async (values) => {
-          await update(session.id, { name: values.name, defaultTaxRate: values.defaultTaxRate });
-          router.push("/sessions");
+          await update({ name: values.name, defaultTaxRate: values.defaultTaxRate });
         }}
       />
-      <div className="mt-4 flex gap-2">
+
+      <div className="mt-6 flex flex-col gap-3">
+        <Link href={`/sessions/${id}/members`}>
+          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
+            <span className="font-medium">{t("session.hub.members")}</span>
+            <span className="text-gray-500">{session.members.length} →</span>
+          </Card>
+        </Link>
+        <Link href={`/sessions/${id}/payment`}>
+          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
+            <span className="font-medium">{t("session.hub.payment")}</span>
+            <span className="text-gray-500">→</span>
+          </Card>
+        </Link>
+        <Link href={`/sessions/${id}/restaurants`}>
+          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
+            <span className="font-medium">{t("session.hub.restaurants")}</span>
+            <span className="text-gray-500">{restaurants.length} →</span>
+          </Card>
+        </Link>
+      </div>
+
+      <div className="mt-6 flex gap-2">
         <Button
           variant="secondary"
-          onClick={() => update(session.id, { status: session.status === "active" ? "closed" : "active" })}
+          onClick={() => update({ status: session.status === "active" ? "closed" : "active" })}
         >
           {session.status === "active" ? t("session.status.close") : t("session.status.reopen")}
         </Button>
@@ -49,11 +79,12 @@ function DetailInner({ id }: { id: string }) {
           {t("common.delete")}
         </Button>
       </div>
+
       {confirming && (
         <DeleteConfirm
           onCancel={() => setConfirming(false)}
           onConfirm={async () => {
-            await remove(session.id);
+            await getSessionRepo().delete(id);
             router.push("/sessions");
           }}
         />
@@ -62,11 +93,11 @@ function DetailInner({ id }: { id: string }) {
   );
 }
 
-export default function SessionDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function SessionHubPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   return (
     <AuthGuard>
-      <DetailInner id={id} />
+      <HubInner id={id} />
     </AuthGuard>
   );
 }
