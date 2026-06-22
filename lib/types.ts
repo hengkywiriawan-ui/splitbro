@@ -55,3 +55,26 @@ export const EMPTY_PAYMENT_INFO: PaymentInfo = {
   ewallet: null,
   note: null,
 };
+
+export interface Restaurant {
+  restaurantId: string;
+  sessionId: string;
+  name: string;
+  date: string | null;
+  order: number;
+  taxIncluded: boolean;
+  taxRate: number;
+  totalAmount: number | null;
+}
+
+export interface NewRestaurantInput {
+  sessionId: string;
+  name: string;
+  date?: string | null;
+  order?: number;
+  taxIncluded?: boolean;
+  taxRate?: number;
+  totalAmount?: number | null;
+}
+
+export type RestaurantPatch = Partial<Omit<Restaurant, "restaurantId" | "sessionId">>;
