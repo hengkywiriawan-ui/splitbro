@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { Session, User, NewSessionInput, Restaurant, NewRestaurantInput, RestaurantPatch } from "@/lib/types";
+import type { Session, User, NewSessionInput, Restaurant, NewRestaurantInput, RestaurantPatch, Item, NewItemInput, ItemPatch, SharedCost, SharedCostPatch } from "@/lib/types";
 
 describe("domain types", () => {
   it("constructs a Session with required fields", () => {
@@ -47,5 +47,38 @@ describe("Restaurant types", () => {
   it("RestaurantPatch allows partial update fields", () => {
     const patch: RestaurantPatch = { name: "New Name", totalAmount: null };
     expect(patch.name).toBe("New Name");
+  });
+});
+
+describe("Item types", () => {
+  it("constructs an Item with all required fields", () => {
+    const item: Item = {
+      itemId: "i1",
+      sessionId: "s1",
+      restaurantId: "r1",
+      name: "Ayam Goreng",
+      price: 25000,
+      assignedTo: ["m1", "m2"],
+    };
+    expect(item.itemId).toBe("i1");
+    expect(item.assignedTo).toHaveLength(2);
+  });
+
+  it("ItemPatch omits immutable fields", () => {
+    const patch: ItemPatch = { name: "Updated", price: 30000, assignedTo: ["m1"] };
+    expect(patch.price).toBe(30000);
+  });
+});
+
+describe("SharedCost types", () => {
+  it("constructs a SharedCost with all required fields", () => {
+    const sc: SharedCost = { costId: "c1", sessionId: "s1", name: "Driver", amount: 50000 };
+    expect(sc.costId).toBe("c1");
+    expect(sc.amount).toBe(50000);
+  });
+
+  it("SharedCostPatch omits immutable fields", () => {
+    const patch: SharedCostPatch = { name: "Parking", amount: 20000 };
+    expect(patch.amount).toBe(20000);
   });
 });

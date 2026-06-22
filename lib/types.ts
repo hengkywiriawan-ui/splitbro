@@ -78,3 +78,37 @@ export interface NewRestaurantInput {
 }
 
 export type RestaurantPatch = Partial<Omit<Restaurant, "restaurantId" | "sessionId">>;
+
+export interface Item {
+  itemId: string;
+  sessionId: string;
+  restaurantId: string;
+  name: string;
+  price: number;        // total price for the item, not per person
+  assignedTo: string[]; // memberId[], min 1
+}
+
+export interface NewItemInput {
+  sessionId: string;
+  restaurantId: string;
+  name: string;
+  price: number;
+  assignedTo: string[];
+}
+
+export type ItemPatch = Partial<Omit<Item, "itemId" | "sessionId" | "restaurantId">>;
+
+export interface SharedCost {
+  costId: string;
+  sessionId: string;
+  name: string;
+  amount: number;
+}
+
+export interface NewSharedCostInput {
+  sessionId: string;
+  name: string;
+  amount: number;
+}
+
+export type SharedCostPatch = Partial<Omit<SharedCost, "costId" | "sessionId">>;
