@@ -6,45 +6,21 @@ export const maxDuration = 30;
 
 type ParsedItem = { name: string; price: number };
 
-// Claude Haiku 4.5 is vision-capable, fast, and cheap. Switch to
-// "claude-sonnet-4-6" for maximum accuracy at higher cost.
-const CLAUDE_MODEL = "claude-haiku-4-5-20251001";
+const GEMINI_MODEL = "gemini-2.5-flash";
 
-// Anthropic recommends the long edge <= 1568px; larger images cost more tokens
-// without improving accuracy. .rotate() applies EXIF orientation (phone photos).
+// Long edge cap: smaller images cost fewer tokens; .rotate() applies EXIF
+// orientation so sideways phone photos are read upright (big accuracy win).
 const MAX_EDGE = 1568;
 
 const PROMPT = `This image is a receipt. Extract ONLY the orderable line items (food, drinks, products).
 
-For each item provide:
-- name: the item name as printed
-- price: the line TOTAL in Indonesian Rupiah as a plain integer (no separators, no decimals). If a quantity is shown, this is the line total (qty x unit price).
+For each item return:
+- "name": the item name as printed
+- "price": the line TOTAL in Indonesian Rupiah as a plain integer (no separators, no decimals). If a quantity is shown, this is the line total (qty x unit price).
 
 IGNORE: subtotal, total, grand total, tax/PPN/pajak, service charge, rounding/pembulatan, payment, cash/tunai, change/kembalian, discount/diskon, and any header/footer text.
 
-Call the record_items tool with the result. If you cannot read any items, return an empty list.`;
-
-const RECORD_ITEMS_TOOL = {
-  name: "record_items",
-  description: "Record the line items read from the receipt.",
-  input_schema: {
-    type: "object" as const,
-    properties: {
-      items: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            name: { type: "string" },
-            price: { type: "number" },
-          },
-          required: ["name", "price"],
-        },
-      },
-    },
-    required: ["items"],
-  },
-};
+Return a JSON array. If you cannot read any items, return an empty array.`;
 
 function toItem(raw: unknown): ParsedItem | null {
   if (typeof raw !== "object" || raw === null) return null;
@@ -56,7 +32,7 @@ function toItem(raw: unknown): ParsedItem | null {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: "ocr not configured" }, { status: 500 });
   }
@@ -81,48 +57,63 @@ export async function POST(req: NextRequest) {
   }
 
   const body = {
-    model: CLAUDE_MODEL,
-    max_tokens: 2048,
-    tools: [RECORD_ITEMS_TOOL],
-    tool_choice: { type: "tool", name: "record_items" },
-    messages: [
+    contents: [
       {
-        role: "user",
-        content: [
-          { type: "image", source: { type: "base64", media_type: "image/jpeg", data: base64 } },
-          { type: "text", text: PROMPT },
+        parts: [
+          { text: PROMPT },
+          { inline_data: { mime_type: "image/jpeg", data: base64 } },
         ],
       },
     ],
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: "ARRAY",
+        items: {
+          type: "OBJECT",
+          properties: {
+            name: { type: "STRING" },
+            price: { type: "NUMBER" },
+          },
+          required: ["name", "price"],
+        },
+      },
+    },
   };
 
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
   let res: Response;
   try {
-    res = await fetch("https://api.anthropic.com/v1/messages", {
+    res = await fetch(url, {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify(body),
     });
   } catch {
-    return NextResponse.json({ error: "claude unreachable" }, { status: 502 });
+    return NextResponse.json({ error: "gemini unreachable" }, { status: 502 });
   }
 
   if (!res.ok) {
-    return NextResponse.json({ error: "claude error" }, { status: 502 });
+    return NextResponse.json({ error: "gemini error" }, { status: 502 });
   }
 
   const data = (await res.json()) as {
-    content?: { type: string; name?: string; input?: unknown }[];
+    candidates?: { content?: { parts?: { text?: string }[] } }[];
   };
-  const toolUse = data.content?.find((b) => b.type === "tool_use" && b.name === "record_items");
-  const rawItems = (toolUse?.input as { items?: unknown[] } | undefined)?.items;
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (typeof text !== "string") {
+    return NextResponse.json({ items: [] });
+  }
 
-  const items: ParsedItem[] = Array.isArray(rawItems)
-    ? rawItems.map(toItem).filter((it): it is ParsedItem => it !== null)
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return NextResponse.json({ items: [] });
+  }
+
+  const items: ParsedItem[] = Array.isArray(parsed)
+    ? parsed.map(toItem).filter((it): it is ParsedItem => it !== null)
     : [];
 
   return NextResponse.json({ items });
