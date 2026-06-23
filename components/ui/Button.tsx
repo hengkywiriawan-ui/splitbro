@@ -1,11 +1,13 @@
 import type { ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "secondary" | "danger";
+type Variant = "primary" | "secondary" | "outline" | "danger" | "ghost";
 
 const styles: Record<Variant, string> = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700",
-  secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
-  danger: "bg-red-600 text-white hover:bg-red-700",
+  primary: "bg-gold text-primary hover:bg-gold-dark shadow-sm",
+  secondary: "bg-primary text-white hover:bg-primary-dark shadow-sm",
+  outline: "bg-card text-primary border border-primary hover:bg-primary-soft",
+  danger: "bg-danger text-white hover:opacity-90",
+  ghost: "bg-transparent text-primary hover:bg-primary-soft",
 };
 
 export function Button({
@@ -15,7 +17,7 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   return (
     <button
-      className={`min-h-11 rounded-lg px-4 py-2 text-base font-medium disabled:opacity-50 ${styles[variant]} ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-4 text-base font-semibold transition-colors disabled:opacity-50 ${styles[variant]} ${className}`}
       {...props}
     />
   );

@@ -6,7 +6,7 @@ import type { Restaurant, SessionMode } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { formatIDR } from "@/lib/format";
+import { Money } from "@/components/ui/Money";
 import { RestaurantForm, type RestaurantFormValues } from "./RestaurantForm";
 
 export function RestaurantList({
@@ -29,7 +29,7 @@ export function RestaurantList({
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   if (restaurants.length === 0) {
-    return <p className="text-sm text-gray-500">{t("restaurant.empty")}</p>;
+    return <p className="text-sm text-ink-muted">{t("restaurant.empty")}</p>;
   }
 
   return (
@@ -72,30 +72,30 @@ export function RestaurantList({
               </div>
             </div>
           ) : (
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="font-medium">{r.name}</p>
-                {r.date && <p className="text-sm text-gray-500">{r.date}</p>}
-                <p className="text-sm text-gray-500">
-                  {r.taxIncluded ? t("restaurant.tax.included") : `PPN ${r.taxRate}%`}
-                </p>
-                {r.totalAmount != null && (
-                  <p className="text-sm">{formatIDR(r.totalAmount)}</p>
-                )}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-semibold">{r.name}</p>
+                  <p className="text-sm text-ink-muted">
+                    {r.date ? `${r.date} · ` : ""}
+                    {r.taxIncluded ? t("restaurant.tax.included") : `PPN ${r.taxRate}%`}
+                  </p>
+                </div>
+                {r.totalAmount != null && <Money amount={r.totalAmount} tone="primary" />}
               </div>
-              <div className="flex gap-1">
+              <div className="flex items-center justify-end gap-1">
                 {sessionMode === "item_based" && (
                   <Link
                     href={`/sessions/${sessionId}/restaurants/${r.restaurantId}`}
-                    className="inline-flex h-9 items-center rounded-md border border-gray-300 bg-white px-3 text-sm hover:bg-gray-50"
+                    className="inline-flex h-9 items-center rounded-md border border-border-subtle bg-card px-3 text-sm font-medium text-primary-dark hover:bg-surface-gray"
                   >
                     {t("item.title")}
                   </Link>
                 )}
-                <Button variant="secondary" onClick={() => setEditingId(r.restaurantId)}>
+                <Button variant="ghost" onClick={() => setEditingId(r.restaurantId)}>
                   {t("common.edit")}
                 </Button>
-                <Button variant="danger" onClick={() => setConfirmingId(r.restaurantId)}>
+                <Button variant="ghost" onClick={() => setConfirmingId(r.restaurantId)}>
                   {t("common.delete")}
                 </Button>
               </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { use, useState } from "react";
-import Link from "next/link";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { useAuth } from "@/lib/auth/provider";
 import { useT } from "@/lib/i18n/provider";
@@ -10,6 +9,7 @@ import { useRestaurants } from "@/lib/data/use-restaurants";
 import { RestaurantForm } from "@/components/restaurants/RestaurantForm";
 import { RestaurantList } from "@/components/restaurants/RestaurantList";
 import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 function RestaurantsInner({ id }: { id: string }) {
   const { user } = useAuth();
@@ -23,10 +23,7 @@ function RestaurantsInner({ id }: { id: string }) {
 
   return (
     <main className="mx-auto max-w-md p-4">
-      <Link href={`/sessions/${id}`} className="mb-4 inline-block text-sm text-blue-600">
-        ← {session.name}
-      </Link>
-      <h1 className="mb-4 text-xl font-bold">{t("restaurant.title")}</h1>
+      <PageHeader title={t("restaurant.title")} backHref={`/sessions/${id}`} />
 
       <RestaurantList
         restaurants={restaurants}

@@ -1,12 +1,13 @@
 "use client";
 
 import { use } from "react";
-import Link from "next/link";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { useAuth } from "@/lib/auth/provider";
 import { useT } from "@/lib/i18n/provider";
 import { useSession } from "@/lib/data/use-session";
 import { PaymentInfoForm } from "@/components/payment/PaymentInfoForm";
+import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 function PaymentInner({ id }: { id: string }) {
   const { user } = useAuth();
@@ -17,17 +18,16 @@ function PaymentInner({ id }: { id: string }) {
   if (!session) return <p className="p-4">{t("session.notFound")}</p>;
 
   return (
-    <main className="mx-auto max-w-md p-4">
-      <Link href={`/sessions/${id}`} className="mb-4 inline-block text-sm text-blue-600">
-        ← {session.name}
-      </Link>
-      <h1 className="mb-4 text-xl font-bold">{t("payment.title")}</h1>
-      <PaymentInfoForm
-        initial={session.paymentInfo}
-        onSubmit={async (info) => {
-          await update({ paymentInfo: info });
-        }}
-      />
+    <main className="mx-auto max-w-2xl px-4 pb-12">
+      <PageHeader title={t("payment.title")} backHref={`/sessions/${id}`} />
+      <Card featured>
+        <PaymentInfoForm
+          initial={session.paymentInfo}
+          onSubmit={async (info) => {
+            await update({ paymentInfo: info });
+          }}
+        />
+      </Card>
     </main>
   );
 }

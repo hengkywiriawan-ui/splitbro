@@ -47,36 +47,38 @@ export function SessionForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">{t("session.field.name")}</span>
-        <Input value={name} onChange={(e) => setName(e.target.value)} aria-label={t("session.field.name")} />
-      </label>
+      <Input
+        label={t("session.field.name")}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        aria-label={t("session.field.name")}
+      />
 
       {mode === "create" ? (
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-medium">{t("session.field.mode")}</span>
+          <span className="label-caps text-ink-muted">{t("session.field.mode")}</span>
           <ModePicker value={selectedMode} onChange={setSelectedMode} />
         </div>
       ) : (
-        <p className="text-sm text-gray-500">{t("session.mode.locked")}</p>
+        <p className="rounded-lg border border-border-subtle bg-surface-gray p-3 text-sm text-ink-muted">
+          {t("session.mode.locked")}
+        </p>
       )}
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">{t("session.field.taxRate")}</span>
-        <Input
-          type="number"
-          value={taxRate}
-          onChange={(e) => setTaxRate(e.target.value)}
-          aria-label={t("session.field.taxRate")}
-        />
-      </label>
+      <Input
+        label={t("session.field.taxRate")}
+        type="number"
+        value={taxRate}
+        onChange={(e) => setTaxRate(e.target.value)}
+        aria-label={t("session.field.taxRate")}
+      />
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm font-medium text-danger">{error}</p>}
 
       <div className="flex gap-2">
         <Button type="submit">{t("common.save")}</Button>
         {onCancel && (
-          <Button type="button" variant="secondary" onClick={onCancel}>
+          <Button type="button" variant="outline" onClick={onCancel}>
             {t("common.cancel")}
           </Button>
         )}

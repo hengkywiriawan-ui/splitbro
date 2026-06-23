@@ -15,6 +15,29 @@ import { DeleteConfirm } from "@/components/sessions/DeleteConfirm";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { PageHeader } from "@/components/ui/PageHeader";
+
+function NavCard({ href, label, meta }: { href: string; label: string; meta?: string }) {
+  return (
+    <Link href={href}>
+      <Card className="flex cursor-pointer items-center justify-between transition-colors hover:border-gold">
+        <span className="font-medium text-ink">{label}</span>
+        <div className="flex items-center gap-2 text-ink-muted">
+          {meta && <span className="text-sm font-semibold">{meta}</span>}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path
+              d="M9 18l6-6-6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+      </Card>
+    </Link>
+  );
+}
 
 function HubInner({ id }: { id: string }) {
   const { user } = useAuth();
@@ -29,67 +52,62 @@ function HubInner({ id }: { id: string }) {
   if (!session) return <p className="p-4">{t("session.notFound")}</p>;
 
   return (
-    <main className="mx-auto max-w-md p-4">
-      <Link href="/sessions" className="mb-4 inline-block text-sm text-blue-600">
-        ← {t("common.back")}
-      </Link>
-
-      <div className="mb-4 flex items-center gap-2">
-        <h1 className="text-xl font-bold">{session.name}</h1>
-        <Badge tone={session.status === "active" ? "green" : "gray"}>
-          {t(session.status === "active" ? "session.status.active" : "session.status.closed")}
-        </Badge>
-      </div>
-
-      <SessionForm
-        mode="edit"
-        initial={{ name: session.name, mode: session.mode, defaultTaxRate: session.defaultTaxRate }}
-        onSubmit={async (values) => {
-          await update({ name: values.name, defaultTaxRate: values.defaultTaxRate });
-        }}
+    <main className="mx-auto max-w-2xl pb-10">
+      <PageHeader
+        title={session.name}
+        backHref="/sessions"
+        action={
+          <Badge tone={session.status === "active" ? "gold" : "gray"}>
+            {t(session.status === "active" ? "session.status.active" : "session.status.closed")}
+          </Badge>
+        }
       />
 
-      <div className="mt-6 flex flex-col gap-3">
-        <Link href={`/sessions/${id}/members`}>
-          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
-            <span className="font-medium">{t("session.hub.members")}</span>
-            <span className="text-gray-500">{session.members.length} →</span>
-          </Card>
-        </Link>
-        <Link href={`/sessions/${id}/payment`}>
-          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
-            <span className="font-medium">{t("session.hub.payment")}</span>
-            <span className="text-gray-500">→</span>
-          </Card>
-        </Link>
-        <Link href={`/sessions/${id}/restaurants`}>
-          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
-            <span className="font-medium">{t("session.hub.restaurants")}</span>
-            <span className="text-gray-500">{restaurants.length} →</span>
-          </Card>
-        </Link>
-        <Link href={`/sessions/${id}/shared-costs`}>
-          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
-            <span className="font-medium">{t("session.hub.sharedCosts")}</span>
-            <span className="text-gray-500">{sharedCosts.length} →</span>
-          </Card>
-        </Link>
-      </div>
+      <div className="px-4">
+        <SessionForm
+          mode="edit"
+          initial={{ name: session.name, mode: session.mode, defaultTaxRate: session.defaultTaxRate }}
+          onSubmit={async (values) => {
+            await update({ name: values.name, defaultTaxRate: values.defaultTaxRate });
+          }}
+        />
 
-      <Link href={`/sessions/${id}/summary`} className="mt-4 block">
-        <Button className="w-full">{t("summary.view")}</Button>
-      </Link>
+        <div className="mt-6 flex flex-col gap-2">
+          <NavCard
+            href={`/sessions/${id}/members`}
+            label={t("session.hub.members")}
+            meta={String(session.members.length)}
+          />
+          <NavCard href={`/sessions/${id}/payment`} label={t("session.hub.payment")} />
+          <NavCard
+            href={`/sessions/${id}/restaurants`}
+            label={t("session.hub.restaurants")}
+            meta={String(restaurants.length)}
+          />
+          <NavCard
+            href={`/sessions/${id}/shared-costs`}
+            label={t("session.hub.sharedCosts")}
+            meta={String(sharedCosts.length)}
+          />
+        </div>
 
-      <div className="mt-6 flex gap-2">
-        <Button
-          variant="secondary"
-          onClick={() => update({ status: session.status === "active" ? "closed" : "active" })}
-        >
-          {session.status === "active" ? t("session.status.close") : t("session.status.reopen")}
-        </Button>
-        <Button variant="danger" onClick={() => setConfirming(true)}>
-          {t("common.delete")}
-        </Button>
+        <Link href={`/sessions/${id}/summary`} className="mt-5 block">
+          <Button className="w-full">{t("summary.view")}</Button>
+        </Link>
+
+        <div className="mt-4 flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() =>
+              void update({ status: session.status === "active" ? "closed" : "active" })
+            }
+          >
+            {session.status === "active" ? t("session.status.close") : t("session.status.reopen")}
+          </Button>
+          <Button variant="danger" onClick={() => setConfirming(true)}>
+            {t("common.delete")}
+          </Button>
+        </div>
       </div>
 
       {confirming && (

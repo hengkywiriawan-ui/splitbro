@@ -1,3 +1,30 @@
-export function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-xl border border-gray-200 bg-white p-4 shadow-sm ${className}`}>{children}</div>;
+import type { ReactNode } from "react";
+
+type Variant = "default" | "premium" | "dark";
+
+const variantClasses: Record<Variant, string> = {
+  default: "bg-card",
+  premium: "bg-card",
+  dark: "bg-primary text-white",
+};
+
+export function Card({
+  children,
+  className = "",
+  variant = "default",
+  featured = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  variant?: Variant;
+  featured?: boolean;
+}) {
+  const featuredClass = featured ? "border-t-4 border-t-gold" : "";
+  return (
+    <div
+      className={`rounded-lg border border-border-subtle p-4 ${variantClasses[variant]} ${featuredClass} ${className}`}
+    >
+      {children}
+    </div>
+  );
 }

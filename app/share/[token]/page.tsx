@@ -13,14 +13,14 @@ function PaymentInfoBlock({ session }: { session: Session }) {
   const hasInfo = pi.bankName || pi.accountNumber || pi.accountName || pi.ewallet || pi.note;
   if (!hasInfo) return null;
   return (
-    <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm">
+    <div className="mt-4 rounded-xl border border-border-subtle bg-surface-gray p-4 text-sm">
       {(pi.bankName || pi.accountNumber || pi.accountName) && (
         <p>
           {[pi.bankName, pi.accountNumber, pi.accountName].filter(Boolean).join(" · ")}
         </p>
       )}
       {pi.ewallet && <p className="mt-1">{t("export.payment.ewallet")}: {pi.ewallet}</p>}
-      {pi.note && <p className="mt-1 text-gray-500">{pi.note}</p>}
+      {pi.note && <p className="mt-1 text-ink-muted">{pi.note}</p>}
     </div>
   );
 }
@@ -36,9 +36,11 @@ function ShareInner({ token }: { token: string }) {
   const settlement = computeSettlement(session, restaurants, itemsByResto, sharedCosts);
 
   return (
-    <main className="mx-auto max-w-md p-4">
-      <h1 className="mb-1 text-xl font-bold">{session.name}</h1>
-      <p className="mb-4 text-sm text-gray-500">{t("share.title")}</p>
+    <main className="mx-auto max-w-3xl px-4 py-6 md:px-6">
+      <header className="mb-5 rounded-xl bg-primary p-5 premium-shadow">
+        <p className="label-caps text-gold">{t("share.title")}</p>
+        <h1 className="mt-1 text-2xl font-bold text-white">{session.name}</h1>
+      </header>
       <BreakdownTable
         breakdown={settlement.breakdown}
         grandTotal={settlement.grandTotal}

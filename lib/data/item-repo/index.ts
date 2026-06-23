@@ -4,7 +4,9 @@ import { mockItemRepo } from "./mock-repo";
 export function getItemRepo(): ItemRepository {
   const backend = process.env.NEXT_PUBLIC_BACKEND ?? "mock";
   if (backend === "firebase") {
-    throw new Error("Firebase item backend not yet implemented");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return (require("./firebase-repo") as { firestoreItemRepo: ItemRepository })
+      .firestoreItemRepo;
   }
   return mockItemRepo;
 }

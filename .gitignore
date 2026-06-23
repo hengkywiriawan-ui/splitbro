@@ -31,3 +31,7 @@ next-env.d.ts
 
 # playwright (local verification artifacts)
 .playwright-mcp/
+
+# firebase service account keys — never commit
+*-firebase-adminsdk-*.json
+service-account*.json

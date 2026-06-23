@@ -5,7 +5,8 @@ import type { Member } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { formatIDR } from "@/lib/format";
+import { Avatar } from "@/components/ui/Avatar";
+import { Money } from "@/components/ui/Money";
 import { MemberForm, type MemberFormValues } from "./MemberForm";
 
 export function MemberList({
@@ -22,7 +23,7 @@ export function MemberList({
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   if (members.length === 0) {
-    return <p className="text-sm text-gray-500">{t("member.empty")}</p>;
+    return <p className="text-sm text-ink-muted">{t("member.empty")}</p>;
   }
 
   return (
@@ -57,18 +58,21 @@ export function MemberList({
               </div>
             </div>
           ) : (
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="font-medium">{m.name}</p>
-                {m.email && <p className="text-sm text-gray-500">{m.email}</p>}
-                {m.phone && <p className="text-sm text-gray-500">{m.phone}</p>}
-                <p className="text-sm">{formatIDR(m.deposit)}</p>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex min-w-0 items-start gap-3">
+                <Avatar name={m.name} />
+                <div className="min-w-0">
+                  <p className="truncate font-semibold">{m.name}</p>
+                  {m.email && <p className="truncate text-sm text-ink-muted">{m.email}</p>}
+                  {m.phone && <p className="truncate text-sm text-ink-muted">{m.phone}</p>}
+                  <Money amount={m.deposit} tone="primary" className="text-sm" />
+                </div>
               </div>
-              <div className="flex gap-1">
-                <Button variant="secondary" onClick={() => setEditingId(m.memberId)}>
+              <div className="flex shrink-0 gap-1">
+                <Button variant="ghost" onClick={() => setEditingId(m.memberId)}>
                   {t("common.edit")}
                 </Button>
-                <Button variant="danger" onClick={() => setConfirmingId(m.memberId)}>
+                <Button variant="ghost" onClick={() => setConfirmingId(m.memberId)}>
                   {t("common.delete")}
                 </Button>
               </div>

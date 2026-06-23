@@ -5,7 +5,8 @@ import type { Item, Member } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { formatIDR } from "@/lib/format";
+import { Money } from "@/components/ui/Money";
+import { Avatar } from "@/components/ui/Avatar";
 import { ItemForm, type ItemFormValues } from "./ItemForm";
 
 export function ItemList({
@@ -24,13 +25,11 @@ export function ItemList({
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   if (items.length === 0) {
-    return <p className="text-sm text-gray-500">{t("item.empty")}</p>;
+    return <p className="text-sm text-ink-muted">{t("item.empty")}</p>;
   }
 
-  function memberNames(assignedTo: string[]): string {
-    return assignedTo
-      .map((id) => members.find((m) => m.memberId === id)?.name ?? "?")
-      .join(", ");
+  function assigneeNames(assignedTo: string[]): string[] {
+    return assignedTo.map((id) => members.find((m) => m.memberId === id)?.name ?? "?");
   }
 
   return (
@@ -66,19 +65,27 @@ export function ItemList({
               </div>
             </div>
           ) : (
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="font-medium">{item.name}</p>
-                <p className="text-sm">{formatIDR(item.price)}</p>
-                <p className="text-sm text-gray-500">{memberNames(item.assignedTo)}</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start justify-between gap-3">
+                <p className="min-w-0 truncate font-semibold">{item.name}</p>
+                <Money amount={item.price} tone="primary" />
               </div>
-              <div className="flex gap-1">
-                <Button variant="secondary" onClick={() => setEditingId(item.itemId)}>
-                  {t("common.edit")}
-                </Button>
-                <Button variant="danger" onClick={() => setConfirmingId(item.itemId)}>
-                  {t("common.delete")}
-                </Button>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex -space-x-2">
+                  {assigneeNames(item.assignedTo).map((name, i) => (
+                    <span key={i} className="rounded-full ring-2 ring-card">
+                      <Avatar name={name} size="sm" />
+                    </span>
+                  ))}
+                </div>
+                <div className="flex shrink-0 gap-1">
+                  <Button variant="ghost" onClick={() => setEditingId(item.itemId)}>
+                    {t("common.edit")}
+                  </Button>
+                  <Button variant="ghost" onClick={() => setConfirmingId(item.itemId)}>
+                    {t("common.delete")}
+                  </Button>
+                </div>
               </div>
             </div>
           )}

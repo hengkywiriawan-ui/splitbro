@@ -9,7 +9,10 @@ import { useSession } from "@/lib/data/use-session";
 import { useItems } from "@/lib/data/use-items";
 import { ItemForm } from "@/components/items/ItemForm";
 import { ItemList } from "@/components/items/ItemList";
+import { OcrScanner } from "@/components/items/OcrScanner";
+import type { ParsedItem } from "@/lib/ocr/use-ocr";
 import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 function ItemsInner({ id, restaurantId }: { id: string; restaurantId: string }) {
   const { user } = useAuth();
@@ -17,6 +20,12 @@ function ItemsInner({ id, restaurantId }: { id: string; restaurantId: string }) 
   const { session, loading: sessionLoading } = useSession(id, user?.uid ?? null);
   const { items, loading: itemsLoading, add, update, remove } = useItems(id, restaurantId);
   const [adding, setAdding] = useState(false);
+  const [prefillQueue, setPrefillQueue] = useState<ParsedItem[]>([]);
+
+  function handleOcrItems(parsed: ParsedItem[]) {
+    setPrefillQueue(parsed);
+    if (parsed.length > 0) setAdding(true);
+  }
 
   if (sessionLoading || itemsLoading) return null;
   if (!session) return <p className="p-4">{t("session.notFound")}</p>;
@@ -24,20 +33,17 @@ function ItemsInner({ id, restaurantId }: { id: string; restaurantId: string }) 
   if (session.mode === "equal") {
     return (
       <main className="mx-auto max-w-md p-4">
-        <Link href={`/sessions/${id}/restaurants`} className="mb-4 inline-block text-sm text-blue-600">
+        <Link href={`/sessions/${id}/restaurants`} className="mb-4 inline-block text-sm font-medium text-primary hover:text-gold">
           ← {t("restaurant.title")}
         </Link>
-        <p className="text-gray-500">{t("item.equalModeOnly")}</p>
+        <p className="text-ink-muted">{t("item.equalModeOnly")}</p>
       </main>
     );
   }
 
   return (
     <main className="mx-auto max-w-md p-4">
-      <Link href={`/sessions/${id}/restaurants`} className="mb-4 inline-block text-sm text-blue-600">
-        ← {t("restaurant.title")}
-      </Link>
-      <h1 className="mb-4 text-xl font-bold">{t("item.title")}</h1>
+      <PageHeader title={t("item.title")} backHref={`/sessions/${id}/restaurants`} />
 
       <ItemList
         items={items}
@@ -54,14 +60,27 @@ function ItemsInner({ id, restaurantId }: { id: string; restaurantId: string }) 
         {adding ? (
           <ItemForm
             members={session.members}
+            initial={
+              prefillQueue.length > 0
+                ? { name: prefillQueue[0].name, price: prefillQueue[0].price, assignedTo: [] }
+                : undefined
+            }
             onSubmit={async (values) => {
               await add(values);
-              setAdding(false);
+              const remaining = prefillQueue.slice(1);
+              setPrefillQueue(remaining);
+              if (remaining.length === 0) setAdding(false);
             }}
-            onCancel={() => setAdding(false)}
+            onCancel={() => {
+              setAdding(false);
+              setPrefillQueue([]);
+            }}
           />
         ) : (
-          <Button onClick={() => setAdding(true)}>{t("item.add")}</Button>
+          <div className="flex flex-col gap-2">
+            <Button onClick={() => setAdding(true)}>{t("item.add")}</Button>
+            <OcrScanner onAddItems={handleOcrItems} />
+          </div>
         )}
       </div>
     </main>

@@ -5,7 +5,7 @@ import type { SharedCost } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { formatIDR } from "@/lib/format";
+import { Money } from "@/components/ui/Money";
 import { SharedCostForm, type SharedCostFormValues } from "./SharedCostForm";
 
 export function SharedCostList({
@@ -22,7 +22,7 @@ export function SharedCostList({
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   if (sharedCosts.length === 0) {
-    return <p className="text-sm text-gray-500">{t("sharedCost.empty")}</p>;
+    return <p className="text-sm text-ink-muted">{t("sharedCost.empty")}</p>;
   }
 
   return (
@@ -51,22 +51,22 @@ export function SharedCostList({
                 >
                   {t("common.delete")}
                 </Button>
-                <Button variant="secondary" onClick={() => setConfirmingId(null)}>
+                <Button variant="outline" onClick={() => setConfirmingId(null)}>
                   {t("common.cancel")}
                 </Button>
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-between gap-2">
-              <div>
-                <p className="font-medium">{sc.name}</p>
-                <p className="text-sm text-gray-500">{formatIDR(sc.amount)}</p>
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-ink">{sc.name}</p>
+                <Money amount={sc.amount} tone="primary" />
               </div>
-              <div className="flex gap-1">
-                <Button variant="secondary" onClick={() => setEditingId(sc.costId)}>
+              <div className="flex shrink-0 gap-1">
+                <Button variant="ghost" onClick={() => setEditingId(sc.costId)}>
                   {t("common.edit")}
                 </Button>
-                <Button variant="danger" onClick={() => setConfirmingId(sc.costId)}>
+                <Button variant="ghost" onClick={() => setConfirmingId(sc.costId)}>
                   {t("common.delete")}
                 </Button>
               </div>

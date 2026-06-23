@@ -1,8 +1,20 @@
-export function Badge({ children, tone = "gray" }: { children: React.ReactNode; tone?: "gray" | "green" | "blue" }) {
-  const tones = {
-    gray: "bg-gray-100 text-gray-700",
-    green: "bg-green-100 text-green-700",
-    blue: "bg-blue-100 text-blue-700",
-  } as const;
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${tones[tone]}`}>{children}</span>;
+import type { ReactNode } from "react";
+
+type Tone = "gray" | "green" | "blue" | "red" | "gold" | "navy";
+
+const tones: Record<Tone, string> = {
+  gray: "bg-surface-gray text-ink-muted border-border-subtle",
+  green: "bg-success-soft text-success border-success/20",
+  blue: "bg-primary-soft text-primary border-primary/20",
+  red: "bg-danger-soft text-danger border-danger/20",
+  gold: "bg-gold-soft text-gold-dark border-gold/30",
+  navy: "bg-primary-container text-white border-primary-container",
+};
+
+export function Badge({ children, tone = "gray" }: { children: ReactNode; tone?: Tone }) {
+  return (
+    <span className={`label-caps inline-flex items-center rounded border px-2 py-0.5 ${tones[tone]}`}>
+      {children}
+    </span>
+  );
 }

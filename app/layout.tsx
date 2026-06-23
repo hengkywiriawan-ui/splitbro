@@ -1,19 +1,32 @@
 import type { Metadata } from "next";
+import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { AuthProviderContext } from "@/lib/auth/provider";
+
+const hanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-hanken",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "SplitBro",
   description: "Split trip bills accurately.",
 };
 
-export const viewport = { width: "device-width", initialScale: 1 };
+export const viewport = { width: "device-width", initialScale: 1, themeColor: "#001e40" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id">
-      <body className="min-h-screen bg-gray-50 text-gray-900">
+    <html lang="id" className={`${hanken.variable} ${jetbrains.variable}`}>
+      <body className="min-h-screen bg-surface text-ink antialiased">
         <I18nProvider>
           <AuthProviderContext>{children}</AuthProviderContext>
         </I18nProvider>

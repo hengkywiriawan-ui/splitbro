@@ -24,10 +24,14 @@ export function ModePicker({
             aria-checked={selected}
             aria-label={t(`session.mode.${m}` as const)}
             onClick={() => onChange(m)}
-            className={`rounded-xl border p-4 text-left ${selected ? "border-blue-600 bg-blue-50" : "border-gray-200"}`}
+            className={`rounded-xl border p-4 text-left transition-all active:scale-[0.99] ${
+              selected
+                ? "border-gold bg-gold-soft text-primary premium-shadow"
+                : "border-border-subtle bg-card text-ink hover:border-primary hover:bg-surface-gray"
+            }`}
           >
-            <div className="font-semibold">{t(`session.mode.${m}` as const)}</div>
-            <div className="text-sm text-gray-600">{t(`session.mode.${m}.desc` as const)}</div>
+            <div className="text-base font-bold">{t(`session.mode.${m}` as const)}</div>
+            <div className="mt-1 text-sm text-ink-muted">{t(`session.mode.${m}.desc` as const)}</div>
           </button>
         );
       })}

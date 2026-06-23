@@ -55,15 +55,15 @@ export function ExportButtons({
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-col gap-2 sm:flex-row">
       <Button
-        variant="secondary"
+        variant="primary"
         onClick={() => void downloadExcel(session, restaurants, itemsByResto, sharedCosts, settlement, labels)}
       >
         {t("export.excel")}
       </Button>
       <Button
-        variant="secondary"
+        variant="outline"
         onClick={() => void downloadPDF(session, settlement, labels)}
       >
         {t("export.pdf")}

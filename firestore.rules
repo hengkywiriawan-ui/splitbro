@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users: own profile only
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Sessions: admin (creator) only — public share access goes through server route
+    match /sessions/{sessionId} {
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.adminId;
+      allow read, update, delete: if request.auth != null
+        && request.auth.uid == resource.data.adminId;
+
+      // Restaurants subcollection
+      match /restaurants/{restaurantId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid == get(/databases/$(database)/documents/sessions/$(sessionId)).data.adminId;
+
+        // Items subcollection (item_based mode only)
+        match /items/{itemId} {
+          allow read, write: if request.auth != null
+            && request.auth.uid == get(/databases/$(database)/documents/sessions/$(sessionId)).data.adminId;
+        }
+      }
+
+      // Shared costs subcollection
+      match /sharedCosts/{costId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid == get(/databases/$(database)/documents/sessions/$(sessionId)).data.adminId;
+      }
+    }
+  }
+}

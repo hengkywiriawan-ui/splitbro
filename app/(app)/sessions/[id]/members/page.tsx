@@ -1,8 +1,8 @@
 "use client";
 
 import { use, useState } from "react";
-import Link from "next/link";
 import { AuthGuard } from "@/components/auth/AuthGuard";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useAuth } from "@/lib/auth/provider";
 import { useT } from "@/lib/i18n/provider";
 import { useSession } from "@/lib/data/use-session";
@@ -22,10 +22,7 @@ function MembersInner({ id }: { id: string }) {
 
   return (
     <main className="mx-auto max-w-md p-4">
-      <Link href={`/sessions/${id}`} className="mb-4 inline-block text-sm text-blue-600">
-        ← {session.name}
-      </Link>
-      <h1 className="mb-4 text-xl font-bold">{t("member.title")}</h1>
+      <PageHeader title={t("member.title")} backHref={`/sessions/${id}`} />
 
       <MemberList
         members={session.members}
