@@ -30,14 +30,22 @@ function SummaryInner({ id }: { id: string }) {
       setItemsByResto({});
       return;
     }
+    let cancelled = false;
     setItemsLoading(true);
     const repo = getItemRepo();
     Promise.all(
       restaurants.map(async (r) => [r.restaurantId, await repo.list(id, r.restaurantId)] as const)
-    ).then((entries) => {
-      setItemsByResto(Object.fromEntries(entries));
-      setItemsLoading(false);
-    });
+    )
+      .then((entries) => {
+        if (cancelled) return;
+        setItemsByResto(Object.fromEntries(entries));
+      })
+      .finally(() => {
+        if (!cancelled) setItemsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id, session?.mode, restaurants]);
 
   const loading = sessionLoading || restoLoading || costsLoading || itemsLoading;
