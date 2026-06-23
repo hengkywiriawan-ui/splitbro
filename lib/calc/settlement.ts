@@ -10,7 +10,7 @@ export type Breakdown = {
   netDue: number;
 };
 
-function applyTax(
+export function applyTax(
   baseAmount: number,
   r: { taxIncluded: boolean; taxRate: number }
 ): number {

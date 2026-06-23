@@ -8,6 +8,7 @@ import { computeSettlement } from "@/lib/calc/settlement";
 import { BreakdownTable } from "@/components/summary/BreakdownTable";
 
 function PaymentInfoBlock({ session }: { session: Session }) {
+  const { t } = useT();
   const pi = session.paymentInfo;
   const hasInfo = pi.bankName || pi.accountNumber || pi.accountName || pi.ewallet || pi.note;
   if (!hasInfo) return null;
@@ -18,7 +19,7 @@ function PaymentInfoBlock({ session }: { session: Session }) {
           {[pi.bankName, pi.accountNumber, pi.accountName].filter(Boolean).join(" · ")}
         </p>
       )}
-      {pi.ewallet && <p className="mt-1">E-Wallet: {pi.ewallet}</p>}
+      {pi.ewallet && <p className="mt-1">{t("export.payment.ewallet")}: {pi.ewallet}</p>}
       {pi.note && <p className="mt-1 text-gray-500">{pi.note}</p>}
     </div>
   );

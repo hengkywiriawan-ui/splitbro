@@ -1,27 +1,49 @@
 import type { Session, Restaurant, Item, SharedCost } from "@/lib/types";
 import type { Breakdown } from "@/lib/calc/settlement";
+import { applyTax } from "@/lib/calc/settlement";
 
-// Local copy — applyTax in settlement.ts is not exported (it's internal to computeSettlement).
-function applyTaxLocal(
-  base: number,
-  r: { taxIncluded: boolean; taxRate: number }
-): number {
-  if (r.taxIncluded) return base;
-  return base + (base * r.taxRate) / 100;
-}
+export type ExportLabels = {
+  sheetSummary: string;
+  sheetDetail: string;
+  colName: string;
+  colConsumption: string;
+  colSharedShare: string;
+  colTotal: string;
+  colDeposit: string;
+  colNetDue: string;
+  colGrandTotal: string;
+  colTotalDeposit: string;
+  colRestaurant: string;
+  colDate: string;
+  colTotalAfterTax: string;
+  colPerPerson: string;
+  colItem: string;
+  colPrice: string;
+  colAssignedTo: string;
+  colSubtotalPerPerson: string;
+  sharedCostsLabel: string;
+  allLabel: string;
+  paymentInfoLabel: string;
+  bankLabel: string;
+  accountNumberLabel: string;
+  accountNameLabel: string;
+  ewalletLabel: string;
+  noteLabel: string;
+};
 
 export async function downloadExcel(
   session: Session,
   restaurants: Restaurant[],
   itemsByResto: Record<string, Item[]>,
   sharedCosts: SharedCost[],
-  settlement: { breakdown: Breakdown[]; grandTotal: number; totalDeposit: number }
+  settlement: { breakdown: Breakdown[]; grandTotal: number; totalDeposit: number },
+  labels: ExportLabels
 ): Promise<void> {
   const XLSX = await import("xlsx");
 
-  // Sheet 1: Ringkasan
+  // Sheet 1: Summary
   const summaryRows: (string | number)[][] = [
-    ["Nama", "Konsumsi", "Biaya Bersama", "Total Tagihan", "Deposit", "Net Due"],
+    [labels.colName, labels.colConsumption, labels.colSharedShare, labels.colTotal, labels.colDeposit, labels.colNetDue],
     ...settlement.breakdown.map((b) => [
       b.name,
       Math.round(b.consumption),
@@ -32,7 +54,7 @@ export async function downloadExcel(
     ]),
     [],
     [
-      "Grand Total",
+      labels.colGrandTotal,
       "",
       "",
       Math.round(settlement.grandTotal),
@@ -42,25 +64,25 @@ export async function downloadExcel(
   ];
 
   const pi = session.paymentInfo;
-  summaryRows.push([], ["Info Pembayaran", ""]);
-  if (pi.bankName) summaryRows.push(["Bank", pi.bankName]);
-  if (pi.accountNumber) summaryRows.push(["No. Rekening", pi.accountNumber]);
-  if (pi.accountName) summaryRows.push(["Atas Nama", pi.accountName]);
-  if (pi.ewallet) summaryRows.push(["E-Wallet", pi.ewallet]);
-  if (pi.note) summaryRows.push(["Catatan", pi.note]);
+  summaryRows.push([], [labels.paymentInfoLabel, ""]);
+  if (pi.bankName) summaryRows.push([labels.bankLabel, pi.bankName]);
+  if (pi.accountNumber) summaryRows.push([labels.accountNumberLabel, pi.accountNumber]);
+  if (pi.accountName) summaryRows.push([labels.accountNameLabel, pi.accountName]);
+  if (pi.ewallet) summaryRows.push([labels.ewalletLabel, pi.ewallet]);
+  if (pi.note) summaryRows.push([labels.noteLabel, pi.note]);
 
   const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, wsSummary, "Ringkasan");
+  XLSX.utils.book_append_sheet(wb, wsSummary, labels.sheetSummary);
 
   // Sheet 2: Detail
   const detailRows: (string | number)[][] = [];
   const N = session.members.length || 1;
 
   if (session.mode === "equal") {
-    detailRows.push(["Restoran", "Tanggal", "Total (after tax)", "Per Orang"]);
+    detailRows.push([labels.colRestaurant, labels.colDate, labels.colTotalAfterTax, labels.colPerPerson]);
     for (const r of restaurants) {
-      const effectiveTotal = applyTaxLocal(r.totalAmount ?? 0, r);
+      const effectiveTotal = applyTax(r.totalAmount ?? 0, r);
       detailRows.push([
         r.name,
         r.date ?? "",
@@ -69,18 +91,18 @@ export async function downloadExcel(
       ]);
     }
     if (sharedCosts.length > 0) {
-      detailRows.push([], ["Biaya Bersama", "", "", ""]);
+      detailRows.push([], [labels.sharedCostsLabel, "", "", ""]);
       for (const sc of sharedCosts) {
         detailRows.push([sc.name, "", Math.round(sc.amount), Math.round(sc.amount / N)]);
       }
     }
   } else {
     detailRows.push([
-      "Restoran",
-      "Item",
-      "Harga",
-      "Assigned To",
-      "Subtotal Per Orang",
+      labels.colRestaurant,
+      labels.colItem,
+      labels.colPrice,
+      labels.colAssignedTo,
+      labels.colSubtotalPerPerson,
     ]);
     for (const r of restaurants) {
       const items = itemsByResto[r.restaurantId] ?? [];
@@ -101,13 +123,13 @@ export async function downloadExcel(
       }
     }
     if (sharedCosts.length > 0) {
-      detailRows.push([], ["Biaya Bersama", "", "", "", ""]);
+      detailRows.push([], [labels.sharedCostsLabel, "", "", "", ""]);
       for (const sc of sharedCosts) {
         detailRows.push([
           sc.name,
           "",
           Math.round(sc.amount),
-          "Semua",
+          labels.allLabel,
           Math.round(sc.amount / N),
         ]);
       }
@@ -115,7 +137,7 @@ export async function downloadExcel(
   }
 
   const wsDetail = XLSX.utils.aoa_to_sheet(detailRows);
-  XLSX.utils.book_append_sheet(wb, wsDetail, "Detail");
+  XLSX.utils.book_append_sheet(wb, wsDetail, labels.sheetDetail);
 
   const date = new Date().toISOString().split("T")[0];
   const safeName = session.name.replace(/[<>:"|?*\\/]/g, "_");

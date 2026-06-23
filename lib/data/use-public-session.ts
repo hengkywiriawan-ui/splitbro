@@ -16,19 +16,22 @@ export function usePublicSession(token: string) {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     async function load() {
       try {
         setLoading(true);
         const found = await getSessionRepo().findByShareToken(token);
         if (!found) {
-          setNotFound(true);
+          if (!cancelled) setNotFound(true);
           return;
         }
+        if (cancelled) return;
         setSession(found);
         const [restos, costs] = await Promise.all([
           getRestaurantRepo().list(found.id),
           getSharedCostRepo().list(found.id),
         ]);
+        if (cancelled) return;
         setRestaurants(restos);
         setSharedCosts(costs);
         if (found.mode === "item_based") {
@@ -38,13 +41,16 @@ export function usePublicSession(token: string) {
               async (r) => [r.restaurantId, await itemRepo.list(found.id, r.restaurantId)] as const
             )
           );
-          setItemsByResto(Object.fromEntries(entries));
+          if (!cancelled) setItemsByResto(Object.fromEntries(entries));
         }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     void load();
+    return () => {
+      cancelled = true;
+    };
   }, [token]);
 
   return { session, restaurants, itemsByResto, sharedCosts, loading, notFound };

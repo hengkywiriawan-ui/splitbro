@@ -1,10 +1,12 @@
 import type { Session } from "@/lib/types";
 import type { Breakdown } from "@/lib/calc/settlement";
+import type { ExportLabels } from "@/lib/export/excel";
 import { formatIDR } from "@/lib/format";
 
 export async function downloadPDF(
   session: Session,
-  settlement: { breakdown: Breakdown[]; grandTotal: number; totalDeposit: number }
+  settlement: { breakdown: Breakdown[]; grandTotal: number; totalDeposit: number },
+  labels: ExportLabels
 ): Promise<void> {
   // Dynamic imports prevent SSR errors — pdfmake references browser globals at module init.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,12 +21,12 @@ export async function downloadPDF(
 
   const tableBody: unknown[][] = [
     [
-      { text: "Nama", bold: true, fillColor: "#f3f4f6" },
-      { text: "Konsumsi", bold: true, fillColor: "#f3f4f6" },
-      { text: "Biaya Bersama", bold: true, fillColor: "#f3f4f6" },
-      { text: "Total", bold: true, fillColor: "#f3f4f6" },
-      { text: "Deposit", bold: true, fillColor: "#f3f4f6" },
-      { text: "Net Due", bold: true, fillColor: "#f3f4f6" },
+      { text: labels.colName, bold: true, fillColor: "#f3f4f6" },
+      { text: labels.colConsumption, bold: true, fillColor: "#f3f4f6" },
+      { text: labels.colSharedShare, bold: true, fillColor: "#f3f4f6" },
+      { text: labels.colTotal, bold: true, fillColor: "#f3f4f6" },
+      { text: labels.colDeposit, bold: true, fillColor: "#f3f4f6" },
+      { text: labels.colNetDue, bold: true, fillColor: "#f3f4f6" },
     ],
     ...settlement.breakdown.map((b) => [
       b.name,
@@ -35,7 +37,7 @@ export async function downloadPDF(
       formatIDR(Math.round(b.netDue)),
     ]),
     [
-      { text: "Grand Total", bold: true, colSpan: 3 }, {}, {},
+      { text: labels.colGrandTotal, bold: true, colSpan: 3 }, {}, {},
       { text: formatIDR(Math.round(settlement.grandTotal)), bold: true },
       { text: formatIDR(Math.round(settlement.totalDeposit)), bold: true },
       "",
@@ -45,12 +47,12 @@ export async function downloadPDF(
   const paymentContent: unknown[] = [];
   if (pi.bankName || pi.accountNumber || pi.accountName) {
     paymentContent.push({
-      text: `Bank: ${pi.bankName ?? "-"}  |  No. Rek: ${pi.accountNumber ?? "-"}  |  Atas Nama: ${pi.accountName ?? "-"}`,
+      text: `${labels.bankLabel}: ${pi.bankName ?? "-"}  |  ${labels.accountNumberLabel}: ${pi.accountNumber ?? "-"}  |  ${labels.accountNameLabel}: ${pi.accountName ?? "-"}`,
       style: "paymentInfo",
     });
   }
-  if (pi.ewallet) paymentContent.push({ text: `E-Wallet: ${pi.ewallet}`, style: "paymentInfo" });
-  if (pi.note) paymentContent.push({ text: `Catatan: ${pi.note}`, style: "paymentInfo" });
+  if (pi.ewallet) paymentContent.push({ text: `${labels.ewalletLabel}: ${pi.ewallet}`, style: "paymentInfo" });
+  if (pi.note) paymentContent.push({ text: `${labels.noteLabel}: ${pi.note}`, style: "paymentInfo" });
 
   const docDefinition = {
     content: [
@@ -66,7 +68,7 @@ export async function downloadPDF(
         layout: "lightHorizontalLines",
       },
       ...(paymentContent.length > 0
-        ? ["\n", { text: "Info Pembayaran", style: "sectionHeader" }, ...paymentContent]
+        ? ["\n", { text: labels.paymentInfoLabel, style: "sectionHeader" }, ...paymentContent]
         : []),
     ],
     styles: {
