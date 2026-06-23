@@ -29,7 +29,7 @@ export function ItemList({
 
   function memberNames(assignedTo: string[]): string {
     return assignedTo
-      .map((id) => members.find((m) => m.memberId === id)?.name ?? id)
+      .map((id) => members.find((m) => m.memberId === id)?.name ?? "?")
       .join(", ");
   }
 
