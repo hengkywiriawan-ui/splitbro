@@ -12,7 +12,7 @@ export async function downloadPDF(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfFonts = ((await import("pdfmake/build/vfs_fonts")) as any).default;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (pdfMake as any).vfs = pdfFonts?.pdfMake?.vfs ?? pdfFonts?.vfs;
+  (pdfMake as any).vfs = pdfFonts;
 
   const date = new Date().toLocaleDateString("id-ID");
   const pi = session.paymentInfo;
