@@ -20,6 +20,34 @@ function formatShareDate(ms: number): string {
   return new Date(ms).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 }
 
+// Copy must be initiated directly inside the click gesture. In PWA/standalone on
+// mobile, an awaited async call before this would drop the user activation and
+// the Clipboard API is rejected — so we copy first, then fall back to execCommand.
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // fall through to the legacy path
+  }
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 function SummaryInner({ id }: { id: string }) {
   const { user } = useAuth();
   const { t } = useT();
@@ -29,6 +57,8 @@ function SummaryInner({ id }: { id: string }) {
   const [itemsByResto, setItemsByResto] = useState<Record<string, Item[]>>({});
   const [itemsLoading, setItemsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+  const [copyFailed, setCopyFailed] = useState(false);
 
   useEffect(() => {
     if (!session || session.mode !== "item_based" || restaurants.length === 0) {
@@ -61,14 +91,19 @@ function SummaryInner({ id }: { id: string }) {
   const linkExpired = Date.now() > session.shareExpiresAt;
 
   async function handleCopyLink() {
-    // The 10-day validity is counted from the moment the link is shared, so
-    // refresh the expiry on every copy (also revives an expired link).
-    await update({ shareExpiresAt: Date.now() + SHARE_TTL_MS });
-    await navigator.clipboard.writeText(
-      `${window.location.origin}/share/${session!.shareToken}`
-    );
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const url = `${window.location.origin}/share/${session!.shareToken}`;
+    setShareUrl(url);
+    // Copy FIRST, while the user activation is still valid (critical for PWA).
+    const ok = await copyToClipboard(url);
+    // Refresh the 10-day validity afterwards (also revives an expired link).
+    void update({ shareExpiresAt: Date.now() + SHARE_TTL_MS });
+    if (ok) {
+      setCopyFailed(false);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } else {
+      setCopyFailed(true);
+    }
   }
 
   return (
@@ -101,6 +136,17 @@ function SummaryInner({ id }: { id: string }) {
             ? t("summary.linkExpiredHint")
             : `${t("summary.linkValidUntil")} ${formatShareDate(session.shareExpiresAt)}`}
         </p>
+        {copyFailed && (
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-ink-muted">{t("summary.copyManual")}</p>
+            <input
+              readOnly
+              value={shareUrl}
+              onFocus={(e) => e.currentTarget.select()}
+              className="w-full rounded-lg border border-border-subtle bg-surface-gray px-3 py-2 text-sm"
+            />
+          </div>
+        )}
       </div>
     </main>
   );

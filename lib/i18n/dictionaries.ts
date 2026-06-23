@@ -153,6 +153,7 @@ export const dictionaries = {
     "summary.generateNew": "Generate Link Baru",
     "summary.linkExpiredHint": "Link sudah kedaluwarsa. Generate link baru untuk membagikan lagi.",
     "share.validUntil": "Berlaku sampai",
+    "summary.copyManual": "Salin manual link di bawah:",
   },
   en: {
     "app.title": "SplitBro",
@@ -306,6 +307,7 @@ export const dictionaries = {
     "summary.generateNew": "Generate New Link",
     "summary.linkExpiredHint": "Link has expired. Generate a new link to share again.",
     "share.validUntil": "Valid until",
+    "summary.copyManual": "Copy the link manually below:",
   },
 } as const;
 
