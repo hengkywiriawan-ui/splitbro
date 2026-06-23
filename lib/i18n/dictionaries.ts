@@ -148,6 +148,7 @@ export const dictionaries = {
     "report.subtotal": "Subtotal",
     "report.tax": "PPN",
     "report.total": "Total",
+    "report.noDate": "Tanpa tanggal",
   },
   en: {
     "app.title": "SplitBro",
@@ -296,6 +297,7 @@ export const dictionaries = {
     "report.subtotal": "Subtotal",
     "report.tax": "VAT",
     "report.total": "Total",
+    "report.noDate": "No date",
   },
 } as const;
 

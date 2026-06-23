@@ -8,11 +8,32 @@ import { formatIDR } from "@/lib/format";
 import { Card } from "@/components/ui/Card";
 import { Money } from "@/components/ui/Money";
 
-function formatDate(date: string | null): string | null {
-  if (!date) return null;
+function formatDateHeader(date: string | null, noDateLabel: string): string {
+  if (!date) return noDateLabel;
   const d = new Date(date);
-  if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
+  if (Number.isNaN(d.getTime())) return noDateLabel;
+  return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" });
+}
+
+// Group restaurants by date (preserving their order within a day), with dated
+// groups ascending and any undated restaurants last.
+function groupByDate(restaurants: Restaurant[]): { date: string | null; list: Restaurant[] }[] {
+  const groups: { date: string | null; list: Restaurant[] }[] = [];
+  const index = new Map<string | null, number>();
+  for (const r of restaurants) {
+    const key = r.date ?? null;
+    if (!index.has(key)) {
+      index.set(key, groups.length);
+      groups.push({ date: key, list: [] });
+    }
+    groups[index.get(key)!].list.push(r);
+  }
+  return groups.sort((a, b) => {
+    if (a.date === b.date) return 0;
+    if (a.date === null) return 1;
+    if (b.date === null) return -1;
+    return a.date < b.date ? -1 : 1;
+  });
 }
 
 type RestaurantTotals = {
@@ -65,7 +86,6 @@ function RestaurantRow({
 }) {
   const { t } = useT();
   const totals = computeTotals(restaurant, items, mode, members.length);
-  const dateLabel = formatDate(restaurant.date);
   const nameById = new Map(members.map((m) => [m.memberId, m.name]));
 
   return (
@@ -82,10 +102,7 @@ function RestaurantRow({
         >
           ▸
         </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate font-semibold text-ink">{restaurant.name}</span>
-          {dateLabel && <span className="text-xs text-ink-muted">{dateLabel}</span>}
-        </span>
+        <span className="min-w-0 flex-1 truncate font-semibold text-ink">{restaurant.name}</span>
         <Money amount={totals.total} tone="gold" className="shrink-0 font-semibold" />
       </button>
 
@@ -149,6 +166,8 @@ export function RestaurantReport({
 
   if (restaurants.length === 0) return null;
 
+  const groups = groupByDate(restaurants);
+
   function toggle(id: string) {
     setOpenIds((prev) => {
       const next = new Set(prev);
@@ -160,18 +179,30 @@ export function RestaurantReport({
 
   return (
     <Card className="mt-4">
-      <p className="label-caps mb-1 text-ink-muted">{t("report.title")}</p>
-      <div className="flex flex-col">
-        {restaurants.map((r) => (
-          <RestaurantRow
-            key={r.restaurantId}
-            restaurant={r}
-            items={itemsByResto[r.restaurantId] ?? []}
-            mode={mode}
-            members={members}
-            open={openIds.has(r.restaurantId)}
-            onToggle={() => toggle(r.restaurantId)}
-          />
+      <p className="label-caps mb-3 text-ink-muted">{t("report.title")}</p>
+      <div className="flex flex-col gap-4">
+        {groups.map((g) => (
+          <div key={g.date ?? "no-date"}>
+            <div className="mb-1.5 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
+              <p className="text-sm font-semibold text-gold">
+                {formatDateHeader(g.date, t("report.noDate"))}
+              </p>
+            </div>
+            <div className="rounded-lg border border-border-subtle px-3">
+              {g.list.map((r) => (
+                <RestaurantRow
+                  key={r.restaurantId}
+                  restaurant={r}
+                  items={itemsByResto[r.restaurantId] ?? []}
+                  mode={mode}
+                  members={members}
+                  open={openIds.has(r.restaurantId)}
+                  onToggle={() => toggle(r.restaurantId)}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </Card>
