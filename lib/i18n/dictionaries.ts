@@ -144,6 +144,10 @@ export const dictionaries = {
     "share.expired": "Link laporan sudah kedaluwarsa (lebih dari 10 minggu).",
     "restaurant.preview.taxIncluded": "Harga sudah termasuk PPN.",
     "restaurant.preview.charged": "Dibebankan ke peserta",
+    "report.title": "Rincian Restoran",
+    "report.subtotal": "Subtotal",
+    "report.tax": "PPN",
+    "report.total": "Total",
   },
   en: {
     "app.title": "SplitBro",
@@ -288,6 +292,10 @@ export const dictionaries = {
     "share.expired": "This report link has expired (older than 10 weeks).",
     "restaurant.preview.taxIncluded": "Price already includes VAT.",
     "restaurant.preview.charged": "Charged to members",
+    "report.title": "Restaurant Details",
+    "report.subtotal": "Subtotal",
+    "report.tax": "VAT",
+    "report.total": "Total",
   },
 } as const;
 

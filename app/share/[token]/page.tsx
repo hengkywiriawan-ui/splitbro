@@ -6,6 +6,7 @@ import { useT } from "@/lib/i18n/provider";
 import { usePublicSession } from "@/lib/data/use-public-session";
 import { computeSettlement } from "@/lib/calc/settlement";
 import { BreakdownTable } from "@/components/summary/BreakdownTable";
+import { RestaurantReport } from "@/components/share/RestaurantReport";
 
 function PaymentInfoBlock({ session }: { session: Session }) {
   const { t } = useT();
@@ -46,6 +47,12 @@ function ShareInner({ token }: { token: string }) {
         breakdown={settlement.breakdown}
         grandTotal={settlement.grandTotal}
         totalDeposit={settlement.totalDeposit}
+      />
+      <RestaurantReport
+        restaurants={restaurants}
+        itemsByResto={itemsByResto}
+        mode={session.mode}
+        members={session.members}
       />
       <PaymentInfoBlock session={session} />
     </main>
