@@ -72,4 +72,9 @@ export const mockRepo: SessionRepository = {
   async delete(id) {
     writeAll(readAll().filter((s) => s.id !== id));
   },
+
+  async findByShareToken(token: string): Promise<Session | null> {
+    if (typeof window === "undefined") return null;
+    return readAll().find((s) => s.shareToken === token) ?? null;
+  },
 };

@@ -6,4 +6,5 @@ export interface SessionRepository {
   create(input: NewSessionInput): Promise<Session>;
   update(id: string, patch: SessionPatch): Promise<void>;
   delete(id: string): Promise<void>;
+  findByShareToken(token: string): Promise<Session | null>;
 }

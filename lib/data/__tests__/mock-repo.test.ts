@@ -46,3 +46,19 @@ describe("mockRepo", () => {
     expect(await mockRepo.get(s.id)).toBeNull();
   });
 });
+
+describe("findByShareToken", () => {
+  beforeEach(() => localStorage.clear());
+
+  it("returns null for unknown token", async () => {
+    const result = await mockRepo.findByShareToken("nonexistent-token");
+    expect(result).toBeNull();
+  });
+
+  it("finds session by shareToken", async () => {
+    const session = await mockRepo.create({ name: "Trip", mode: "equal", adminId: "u1" });
+    const found = await mockRepo.findByShareToken(session.shareToken);
+    expect(found?.id).toBe(session.id);
+    expect(found?.shareToken).toBe(session.shareToken);
+  });
+});
