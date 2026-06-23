@@ -34,9 +34,16 @@ async function upsertUserDoc(fbUser: import("firebase/auth").User): Promise<void
 }
 
 export const firebaseAuthProvider: AuthProvider = {
-  async getCurrentUser() {
-    const fbUser = firebaseAuth.currentUser;
-    return fbUser ? toUser(fbUser) : null;
+  getCurrentUser() {
+    // Wait for the first auth-state event so persistence (IndexedDB) is restored
+    // before answering — currentUser is null synchronously on a cold start,
+    // which would otherwise force a needless re-login when reopening the app.
+    return new Promise<User | null>((resolve) => {
+      const off = onAuthStateChanged(firebaseAuth, (fbUser) => {
+        off();
+        resolve(fbUser ? toUser(fbUser) : null);
+      });
+    });
   },
 
   async signInWithGoogle() {

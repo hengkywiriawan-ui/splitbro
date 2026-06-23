@@ -21,6 +21,8 @@ export function AuthProviderContext({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     let active = true;
+    // getCurrentUser waits for persistence to be restored (see firebase-auth),
+    // so this resolves with the real signed-in user on cold start, not null.
     auth.getCurrentUser().then((u) => {
       if (active) {
         setUser(u);

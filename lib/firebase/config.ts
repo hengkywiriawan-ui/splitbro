@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -14,4 +14,11 @@ const firebaseConfig = {
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const firebaseAuth = getAuth(app);
+
+// Persist the session in IndexedDB so it survives app/tab close on mobile.
+// Without this, a cold start can drop the session and force re-login.
+if (typeof window !== "undefined") {
+  void setPersistence(firebaseAuth, browserLocalPersistence);
+}
+
 export const firestore = getFirestore(app);

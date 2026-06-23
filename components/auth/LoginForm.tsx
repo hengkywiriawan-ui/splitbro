@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth/provider";
 import { useT } from "@/lib/i18n/provider";
@@ -9,12 +9,17 @@ import { Input } from "@/components/ui/Input";
 import { Card } from "@/components/ui/Card";
 
 export function LoginForm() {
-  const { signInGoogle, signInEmail } = useAuth();
+  const { user, signInGoogle, signInEmail } = useAuth();
   const { t } = useT();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  // Already signed in (e.g. session restored on reopen) → skip the login screen.
+  useEffect(() => {
+    if (user) router.replace("/sessions");
+  }, [user, router]);
 
   async function go(action: () => Promise<void>) {
     try {
