@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth/provider";
 import { useT } from "@/lib/i18n/provider";
@@ -33,7 +34,15 @@ export function LoginForm() {
 
   return (
     <Card className="mx-auto mt-16 w-full max-w-sm">
-      <h1 className="mb-4 text-xl font-bold">{t("login.title")}</h1>
+      <Image
+        src="/icons/logo1.png"
+        alt="SplitBro"
+        width={150}
+        height={183}
+        priority
+        className="mx-auto mb-4 h-auto w-36"
+      />
+      <h1 className="mb-4 text-center text-xl font-bold">{t("login.title")}</h1>
       <Button className="w-full" onClick={() => go(signInGoogle)}>
         {t("login.google")}
       </Button>
