@@ -26,7 +26,7 @@ sessions/{sessionId}
   defaultTaxRate: number,             // default 11
   status: "active" | "closed",
   shareToken: string,                 // token unik untuk laporan publik read-only
-  shareExpiresAt: number,             // epoch ms; laporan publik diblokir setelah ini (default createdAt + 10 minggu)
+  shareExpiresAt: number,             // epoch ms; laporan publik diblokir setelah ini (10 hari sejak link di-share)
   paymentInfo: {
     bankName: string | null,
     accountNumber: string | null,

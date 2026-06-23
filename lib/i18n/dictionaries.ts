@@ -149,6 +149,10 @@ export const dictionaries = {
     "report.tax": "PPN",
     "report.total": "Total",
     "report.noDate": "Tanpa tanggal",
+    "summary.linkValidUntil": "Link berlaku sampai",
+    "summary.generateNew": "Generate Link Baru",
+    "summary.linkExpiredHint": "Link sudah kedaluwarsa. Generate link baru untuk membagikan lagi.",
+    "share.validUntil": "Berlaku sampai",
   },
   en: {
     "app.title": "SplitBro",
@@ -298,6 +302,10 @@ export const dictionaries = {
     "report.tax": "VAT",
     "report.total": "Total",
     "report.noDate": "No date",
+    "summary.linkValidUntil": "Link valid until",
+    "summary.generateNew": "Generate New Link",
+    "summary.linkExpiredHint": "Link has expired. Generate a new link to share again.",
+    "share.validUntil": "Valid until",
   },
 } as const;
 

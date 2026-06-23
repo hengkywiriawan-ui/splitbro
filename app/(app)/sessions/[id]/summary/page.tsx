@@ -14,11 +14,16 @@ import { BreakdownTable } from "@/components/summary/BreakdownTable";
 import { ExportButtons } from "@/components/summary/ExportButtons";
 import { Button } from "@/components/ui/Button";
 import type { Item } from "@/lib/types";
+import { SHARE_TTL_MS } from "@/lib/types";
+
+function formatShareDate(ms: number): string {
+  return new Date(ms).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+}
 
 function SummaryInner({ id }: { id: string }) {
   const { user } = useAuth();
   const { t } = useT();
-  const { session, loading: sessionLoading } = useSession(id, user?.uid ?? null);
+  const { session, loading: sessionLoading, update } = useSession(id, user?.uid ?? null);
   const { restaurants, loading: restoLoading } = useRestaurants(id);
   const { sharedCosts, loading: costsLoading } = useSharedCosts(id);
   const [itemsByResto, setItemsByResto] = useState<Record<string, Item[]>>({});
@@ -53,8 +58,12 @@ function SummaryInner({ id }: { id: string }) {
   if (!session) return <p className="p-4">{t("session.notFound")}</p>;
 
   const settlement = computeSettlement(session, restaurants, itemsByResto, sharedCosts);
+  const linkExpired = Date.now() > session.shareExpiresAt;
 
   async function handleCopyLink() {
+    // The 10-day validity is counted from the moment the link is shared, so
+    // refresh the expiry on every copy (also revives an expired link).
+    await update({ shareExpiresAt: Date.now() + SHARE_TTL_MS });
     await navigator.clipboard.writeText(
       `${window.location.origin}/share/${session!.shareToken}`
     );
@@ -81,8 +90,17 @@ function SummaryInner({ id }: { id: string }) {
           settlement={settlement}
         />
         <Button variant="secondary" onClick={() => void handleCopyLink()}>
-          {copied ? t("summary.linkCopied") : t("summary.copyLink")}
+          {copied
+            ? t("summary.linkCopied")
+            : linkExpired
+              ? t("summary.generateNew")
+              : t("summary.copyLink")}
         </Button>
+        <p className="text-center text-xs text-ink-muted">
+          {linkExpired
+            ? t("summary.linkExpiredHint")
+            : `${t("summary.linkValidUntil")} ${formatShareDate(session.shareExpiresAt)}`}
+        </p>
       </div>
     </main>
   );

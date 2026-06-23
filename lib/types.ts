@@ -41,8 +41,8 @@ export interface Session {
   updatedAt: number;
 }
 
-// Public share link lifetime: 10 weeks (70 days) from session creation.
-export const SHARE_TTL_MS = 70 * 24 * 60 * 60 * 1000;
+// Public share link lifetime: 10 days, counted from when the link is shared.
+export const SHARE_TTL_MS = 10 * 24 * 60 * 60 * 1000;
 
 export interface NewSessionInput {
   name: string;

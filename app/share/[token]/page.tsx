@@ -8,6 +8,10 @@ import { computeSettlement } from "@/lib/calc/settlement";
 import { BreakdownTable } from "@/components/summary/BreakdownTable";
 import { RestaurantReport } from "@/components/share/RestaurantReport";
 
+function formatShareDate(ms: number): string {
+  return new Date(ms).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+}
+
 function PaymentInfoBlock({ session }: { session: Session }) {
   const { t } = useT();
   const pi = session.paymentInfo;
@@ -42,6 +46,9 @@ function ShareInner({ token }: { token: string }) {
       <header className="mb-5 rounded-xl bg-primary p-5 premium-shadow">
         <p className="label-caps text-gold">{t("share.title")}</p>
         <h1 className="mt-1 text-2xl font-bold text-white">{session.name}</h1>
+        <p className="mt-2 text-xs text-white/60">
+          {t("share.validUntil")} {formatShareDate(session.shareExpiresAt)}
+        </p>
       </header>
       <BreakdownTable
         breakdown={settlement.breakdown}
