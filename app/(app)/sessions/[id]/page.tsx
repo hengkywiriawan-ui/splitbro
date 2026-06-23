@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth/provider";
 import { useT } from "@/lib/i18n/provider";
 import { useSession } from "@/lib/data/use-session";
 import { useRestaurants } from "@/lib/data/use-restaurants";
+import { useSharedCosts } from "@/lib/data/use-shared-costs";
 import { getSessionRepo } from "@/lib/data/index";
 import { SessionForm } from "@/components/sessions/SessionForm";
 import { DeleteConfirm } from "@/components/sessions/DeleteConfirm";
@@ -21,6 +22,7 @@ function HubInner({ id }: { id: string }) {
   const router = useRouter();
   const { session, loading, update } = useSession(id, user?.uid ?? null);
   const { restaurants } = useRestaurants(id);
+  const { sharedCosts } = useSharedCosts(id);
   const [confirming, setConfirming] = useState(false);
 
   if (loading) return null;
@@ -64,6 +66,12 @@ function HubInner({ id }: { id: string }) {
           <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
             <span className="font-medium">{t("session.hub.restaurants")}</span>
             <span className="text-gray-500">{restaurants.length} →</span>
+          </Card>
+        </Link>
+        <Link href={`/sessions/${id}/shared-costs`}>
+          <Card className="flex cursor-pointer items-center justify-between hover:bg-gray-50">
+            <span className="font-medium">{t("session.hub.sharedCosts")}</span>
+            <span className="text-gray-500">{sharedCosts.length} →</span>
           </Card>
         </Link>
       </div>

@@ -32,6 +32,7 @@ function RestaurantsInner({ id }: { id: string }) {
         restaurants={restaurants}
         sessionMode={session.mode}
         defaultTaxRate={session.defaultTaxRate}
+        sessionId={id}
         onUpdate={async (restaurantId, values) => {
           await update(restaurantId, values);
         }}

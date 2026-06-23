@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { Restaurant, SessionMode } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
@@ -12,12 +13,14 @@ export function RestaurantList({
   restaurants,
   sessionMode,
   defaultTaxRate,
+  sessionId,
   onUpdate,
   onRemove,
 }: {
   restaurants: Restaurant[];
   sessionMode: SessionMode;
   defaultTaxRate: number;
+  sessionId: string;
   onUpdate: (restaurantId: string, values: RestaurantFormValues) => void;
   onRemove: (restaurantId: string) => void;
 }) {
@@ -81,6 +84,14 @@ export function RestaurantList({
                 )}
               </div>
               <div className="flex gap-1">
+                {sessionMode === "item_based" && (
+                  <Link
+                    href={`/sessions/${sessionId}/restaurants/${r.restaurantId}`}
+                    className="inline-flex h-9 items-center rounded-md border border-gray-300 bg-white px-3 text-sm hover:bg-gray-50"
+                  >
+                    {t("item.title")}
+                  </Link>
+                )}
                 <Button variant="secondary" onClick={() => setEditingId(r.restaurantId)}>
                   {t("common.edit")}
                 </Button>
