@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>SplitBro Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration: Heritage Excellence (Gudang Garam Inspired) -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#191c1d",
+                    "on-primary-container": "#799dd6",
+                    "surface-bright": "#f8f9fa",
+                    "surface-variant": "#e1e3e4",
+                    "surface": "#f8f9fa",
+                    "outline-variant": "#c3c6d1",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f0f1f2",
+                    "secondary": "#bb0027", // Heritage Red
+                    "surface-container-highest": "#e1e3e4",
+                    "on-secondary-container": "#fffbff",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "inverse-primary": "#a7c8ff",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#43474f",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-container": "#003366", // Signature Deep Blue
+                    "tertiary-fixed": "#ffe088",
+                    "on-secondary-fixed-variant": "#92001c",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#241a00",
+                    "inverse-surface": "#2e3132",
+                    "on-surface": "#191c1d",
+                    "outline": "#737780",
+                    "error-container": "#ffdad6",
+                    "background": "#f8f9fa",
+                    "primary-fixed": "#d5e3ff",
+                    "surface-container-low": "#f3f4f5",
+                    "tertiary-container": "#cca830", // Heritage Gold
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#e0283c",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad8",
+                    "primary": "#001e40", // Darker Brand Blue
+                    "on-secondary-fixed": "#410007",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "on-tertiary-container": "#4f3e00",
+                    "surface-dim": "#d9dadb",
+                    "surface-container": "#edeeef",
+                    "surface-tint": "#3a5f94",
+                    "tertiary": "#735c00",
+                    "on-primary-fixed": "#001b3c",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "border-subtle": "#e1e3e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "stack-md": "16px",
+                    "container-padding": "16px",
+                    "gutter": "12px",
+                    "stack-sm": "8px",
+                    "stack-lg": "24px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-caps": ["Hanken Grotesk"],
+                    "number-display": ["JetBrains Mono"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "number-sm": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-sm": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "number-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "headline-lg": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "number-sm": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "26px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .safe-area-inset-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar - Signature Blue -->
+<header class="fixed top-0 w-full z-50 bg-primary-container backdrop-blur-sm border-b border-primary/20 flex items-center px-container-padding h-14 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="payments">payments</span>
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">SplitBro</h1>
+</div>
+<div class="ml-auto flex gap-4">
+<button class="transition-colors duration-200 active:scale-95 hover:bg-white/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-on-primary/80" data-icon="search">search</span>
+</button>
+<button class="transition-colors duration-200 active:scale-95 hover:bg-white/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-on-primary/80" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="mt-20 px-container-padding space-y-stack-lg">
+<!-- Quick Stats Bento Section -->
+<section class="grid grid-cols-2 gap-gutter">
+<div class="col-span-2 bg-primary-container p-stack-md rounded-xl text-on-primary flex flex-col justify-between h-32 relative overflow-hidden shadow-lg border border-white/10">
+<div class="z-10">
+<p class="font-label-caps text-label-caps text-tertiary-fixed-dim/90">TOTAL OUTSTANDING</p>
+<p class="font-number-display text-2xl mt-1">Rp 1.250.000</p>
+</div>
+<div class="z-10 flex items-center gap-2 text-body-sm opacity-90">
+<span class="material-symbols-outlined text-sm text-tertiary-fixed-dim" data-icon="trending_up">trending_up</span>
+<span>3 active sessions</span>
+</div>
+<!-- Abstract visual element -->
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-tertiary-container/20 rounded-full blur-2xl"></div>
+</div>
+</section>
+<!-- Active Sessions Section -->
+<section class="space-y-stack-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-primary">Active Sessions</h2>
+<button class="text-secondary font-label-caps text-label-caps transition-colors hover:opacity-80">VIEW ALL</button>
+</div>
+<!-- Session Card 1 -->
+<div class="bg-surface border border-border-subtle rounded-xl p-stack-md flex flex-col gap-4 transition-all duration-300 active:scale-[0.98] hover:shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-secondary/10 text-secondary px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-secondary/20">Active</span>
+<span class="text-on-surface-variant font-label-caps text-[10px]">CREATED 2 DAYS AGO</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary">Trip Kediri 5 Hari</h3>
+</div>
+<div class="h-10 w-10 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="flight">flight</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 py-2 border-y border-border-subtle/50">
+<div>
+<p class="font-label-caps text-[10px] text-outline">MEMBERS</p>
+<div class="flex -space-x-2 mt-1">
+<div class="w-6 h-6 rounded-full border-2 border-surface bg-gray-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxAZXN56DlOMdNqggC5LKv8zSPsDkG025ax7Hx9bzL3k2wk_5PuDxWIkMx-ift3HbTWzwRn68EuhpnSNyUxHGJrr4DWaRpLEygwr2qQp8hNwE2NehQ5qXz5miqI6sG_Hiw_b4osPcKPzPA5xgAzubxl0bljg_4QRPbtMjqytZUPpFxCBHXFpFHlN-GeSemmddJb4BTgYuEwqJypQg4MkGGUSeTyBYnE2yaKpmwhJqMIH4p1x3r004kYdX-akobitW2pqeM2xLY6hU"/>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-surface bg-gray-300 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATAOLCfHVf0Tfu_24tgAJ0_cYVsIEr9PqE0-8kWeRFF0pB9j9jWYLkcQ4Xp1v3pP78q7eCx5aeo_pqSuJeKyAjsy1RB3E112DDAFBjoXlfuBJxtNP2E-Gc3xBpjsEI20IALPldmrhKUQKkzJvzwYaRwQylkXNTJ73cEpbi666GcK2gY1vGWunR_61V5gikzik_pG15Vhl2ldxnfg0e3cYkV4y3L-DiLhtC3VlHGhKLsCjybLzZurzdmCv4130tJMY4885BnCFxmRo"/>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-surface bg-primary-container text-on-primary flex items-center justify-center text-[8px] font-bold">
+                                +4
+                            </div>
+</div>
+</div>
+<div>
+<p class="font-label-caps text-[10px] text-outline text-right">TOTAL SPENT</p>
+<p class="font-number-display text-primary text-right">Rp 4.500.000</p>
+</div>
+</div>
+<div class="flex gap-2">
+<!-- Gold Action Button -->
+<button class="flex-1 py-2 bg-tertiary-container text-on-tertiary-container rounded-lg font-label-caps text-label-caps font-bold transition-all active:scale-95 shadow-md hover:brightness-110">VIEW DETAILS</button>
+<button class="px-4 py-2 border border-border-subtle text-on-surface rounded-lg transition-colors active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="share">share</span>
+</button>
+</div>
+</div>
+<!-- Session Card 2 -->
+<div class="bg-surface border border-border-subtle rounded-xl p-stack-md flex flex-col gap-4 transition-all duration-300 active:scale-[0.98] hover:shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-tertiary-container/10 text-tertiary-container px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase border border-tertiary-container/20">Pending</span>
+<span class="text-on-surface-variant font-label-caps text-[10px]">IDR RECOVERY</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary">Dinner at Senopati</h3>
+</div>
+<div class="h-10 w-10 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="restaurant">restaurant</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-body-sm text-on-surface-variant">4 members involved</p>
+<p class="font-number-display text-headline-md text-primary">Rp 820.000</p>
+</div>
+</div>
+</section>
+<!-- Past Trips Section -->
+<section class="space-y-stack-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-primary">Past Trips</h2>
+</div>
+<div class="space-y-gutter">
+<!-- Past Trip Item 1 -->
+<div class="flex items-center gap-4 p-3 bg-surface-container-low rounded-xl border border-transparent hover:border-border-subtle transition-all">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-border-subtle">
+<span class="material-symbols-outlined text-outline" data-icon="history">history</span>
+</div>
+<div class="flex-1">
+<h4 class="font-body-lg font-semibold text-primary">Bali Weekend Blast</h4>
+<p class="text-body-sm text-outline">Oct 12 - Oct 14, 2023</p>
+</div>
+<div class="text-right">
+<p class="font-number-sm text-on-surface font-semibold">Settled</p>
+<p class="font-number-sm text-outline text-[11px]">Rp 12.4M</p>
+</div>
+</div>
+<!-- Past Trip Item 2 -->
+<div class="flex items-center gap-4 p-3 bg-surface-container-low rounded-xl border border-transparent hover:border-border-subtle transition-all">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-border-subtle">
+<span class="material-symbols-outlined text-outline" data-icon="payments">payments</span>
+</div>
+<div class="flex-1">
+<h4 class="font-body-lg font-semibold text-primary">Weekly Groceries</h4>
+<p class="text-body-sm text-outline">Sep 28, 2023</p>
+</div>
+<div class="text-right">
+<p class="font-number-sm text-secondary font-semibold">Archived</p>
+<p class="font-number-sm text-outline text-[11px]">Rp 450K</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB - Gold for premium feel -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-tertiary-container text-on-tertiary-container rounded-2xl shadow-xl flex items-center justify-center transition-all duration-300 active:scale-90 hover:shadow-2xl z-40 border border-white/20">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface dark:bg-surface-container-lowest border-t border-border-subtle">
+<div class="flex justify-around items-center w-full px-4 h-16">
+<!-- Sessions (Active) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold bg-primary-container/10 rounded-xl px-4 py-1 transition-all duration-300 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-caps text-label-caps mt-0.5">Sessions</span>
+</a>
+<!-- History -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 transition-all duration-300 active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps mt-0.5">History</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 transition-all duration-300 active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-caps text-label-caps mt-0.5">Profile</span>
+</a>
+</div>
+</nav>
+<script>
+        // Micro-interaction for session cards
+        document.querySelectorAll('.bg-surface.border').forEach(card => {
+            card.addEventListener('click', () => {
+                console.log('Session card clicked');
+            });
+        });
+
+        // Simple scroll behavior for header
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScroll && currentScroll > 60) {
+                header.classList.add('-translate-y-full');
+            } else {
+                header.classList.remove('-translate-y-full');
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+</body></html>

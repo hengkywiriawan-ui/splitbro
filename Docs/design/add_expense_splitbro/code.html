@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Add Expense - SplitBro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#191c1d",
+                    "on-primary-container": "#799dd6",
+                    "surface-bright": "#f8f9fa",
+                    "surface-variant": "#e1e3e4",
+                    "surface": "#f8f9fa",
+                    "outline-variant": "#c3c6d1",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f0f1f2",
+                    "secondary": "#bb0027",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-secondary-container": "#fffbff",
+                    "on-primary-fixed-variant": "#1f477b",
+                    "inverse-primary": "#a7c8ff",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#43474f",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-container": "#003366",
+                    "tertiary-fixed": "#ffe088",
+                    "on-secondary-fixed-variant": "#92001c",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#241a00",
+                    "inverse-surface": "#2e3132",
+                    "on-surface": "#191c1d",
+                    "outline": "#737780",
+                    "error-container": "#ffdad6",
+                    "background": "#f8f9fa",
+                    "primary-fixed": "#d5e3ff",
+                    "surface-container-low": "#f3f4f5",
+                    "tertiary-container": "#cca830",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#e0283c",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "secondary-fixed": "#ffdad8",
+                    "primary": "#001e40",
+                    "on-secondary-fixed": "#410007",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "on-tertiary-container": "#4f3e00",
+                    "surface-dim": "#d9dadb",
+                    "surface-container": "#edeeef",
+                    "surface-tint": "#3a5f94",
+                    "tertiary": "#735c00",
+                    "on-primary-fixed": "#001b3c",
+                    "primary-fixed-dim": "#a7c8ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "container-max": "1280px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px",
+                    "xxl": "48px",
+                    "md": "16px",
+                    "base": "8px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "stack-md": "16px",
+                    "container-padding": "16px",
+                    "stack-sm": "8px",
+                    "stack-lg": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Hanken Grotesk"],
+                    "title-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"],
+                    "number-display": ["JetBrains Mono"],
+                    "number-sm": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "number-display": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "number-sm": ["13px", {"lineHeight": "16px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { min-height: max(884px, 100dvh); }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- Top AppBar (Heritage Blue) -->
+<header class="fixed top-0 w-full z-50 flex items-center px-container-padding h-14 bg-primary text-on-primary shadow-md">
+<button class="mr-4 text-on-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold">New Bill</h1>
+<div class="ml-auto">
+<button class="text-on-primary font-label-md text-label-md py-2 px-3 hover:bg-white/10 rounded-full transition-colors border border-on-primary/30">DRAFT</button>
+</div>
+</header>
+<main class="mt-14 p-container-padding space-y-stack-lg max-w-md mx-auto">
+<!-- Scan Receipt Section (Gold Button) -->
+<section class="pt-4">
+<button class="w-full h-14 bg-tertiary-container text-on-tertiary-container flex items-center justify-center gap-2 rounded-xl font-headline-md text-headline-md shadow-sm active:scale-[0.98] transition-transform border border-tertiary">
+<span class="material-symbols-outlined">receipt_long</span>
+                Scan Receipt (OCR)
+            </button>
+<p class="text-center text-label-md font-label-md text-outline mt-2">Instantly extract items from photo</p>
+</section>
+<!-- Basic Info Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 space-y-4 shadow-sm">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Restaurant Name</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant focus:border-primary outline-none py-2 px-1 font-body-md text-body-md transition-colors" placeholder="e.g. Steakhouse Prime" type="text"/>
+</div>
+<div class="flex gap-4">
+<div class="flex-1 space-y-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">Date</label>
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant focus:border-primary outline-none py-2 px-1 font-body-md text-body-md" type="date" value="2023-10-27"/>
+</div>
+<div class="flex-1 flex flex-col justify-end">
+<label class="relative inline-flex items-center cursor-pointer mb-2">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<span class="ms-3 font-label-sm text-label-sm text-on-surface-variant">PPN (11%)</span>
+</label>
+</div>
+</div>
+</section>
+<!-- Itemized List Header -->
+<div class="flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Bill Items</h2>
+<span class="font-label-sm text-label-sm bg-primary/10 text-primary px-2 py-0.5 rounded-lg border border-primary/20">ITEM-BASED MODE</span>
+</div>
+<!-- Item List -->
+<div class="space-y-stack-md" id="item-list">
+<!-- Item Row 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden group shadow-sm">
+<div class="p-4 space-y-4">
+<div class="flex gap-4">
+<div class="flex-1">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-body-lg text-body-lg font-semibold text-on-surface" placeholder="Menu Item" type="text" value="Wagyu Ribeye 200g"/>
+</div>
+<div class="w-32 flex items-center gap-1 border-b border-outline-variant focus-within:border-primary">
+<span class="text-outline font-label-sm">IDR</span>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-right font-number-display text-number-display" type="number" value="450000"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline block uppercase">Assigned To</label>
+<div class="flex flex-wrap gap-2">
+<!-- Avatar Multi-Select -->
+<button class="relative w-10 h-10 rounded-full border-2 border-primary overflow-hidden group/avatar">
+<div class="absolute inset-0 bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcmw7_z7QXHZtlcjuryMi3CJJBTO22T6l-OaeDT3AfBztJk5a0w5q0hALiqIGAmJDvCuqSPhq3_RTzkhJ1Vwy3CzFJ5VT2x_8oFjgIcsXBjEF4rgj_PgpwQocGwb2SXBbFR3mRaXH9rxtR9HBppATkjcOjIlYnEY90OwN8SYdlixfjnMuanoEKTGEFx2wueda793voi6z4twzdh9flGW_PiQtNLSiE7IMBt8ET132AZrCfFGwY1X9CZDSWZfWpALVLwGiPE_HpFvw"/>
+</button>
+<button class="relative w-10 h-10 rounded-full border-2 border-transparent overflow-hidden grayscale hover:grayscale-0 transition-all">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN0--wNaKRryWUL_97l840zoMVGZKAmecs12fYQ_TZyBodBs6XjcaUpEDjLSlUTH7hAaSR3HlTyaP2TZ6tF5r4_H6aUaC84nVwHNNy2beviJ-HbAHQ9pTzTympPw2_v8Lz6pZlyo_azni7hsA8y02hf2q1fp6W_9Z8lYL20JjV9iRJrw3kKHRPNkIeaRXmvAJwlWfHIHU4HSEHb7dU2FpD_6hRYkk9LdKzykusSXtughh0mCuMSnr5fiU5H2cQV2eBMY0BcLugzRs"/>
+</button>
+<button class="relative w-10 h-10 rounded-full border-2 border-transparent overflow-hidden grayscale hover:grayscale-0 transition-all">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAR2Wg5A8Zw-BOH6F5vdHlD2k-QRa8tHeuy4hT8Yzlwsk0py3NfygTDPhCgMpybmRZilD1EwNJCzFf6rt_yOF2TVZVLbTRNZ3e2ospTtG49qtlViJcZit-VriLDmJ3DcUj4fXDuhaNlEZmIasWoLDZWUH6qNpciWPZiVfFvn5FlGX6kibRca0Cg6sBlSYt_PmFhUiXYu44rWQ3G9I-XOySbwyjYGgr5jbZheaYwSz6oPAJ0ai9gdjbNhVQdtxqSuR2-81ERn24eIXU"/>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center border-2 border-dashed border-outline-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-outline">add</span>
+</button>
+</div>
+</div>
+</div>
+<div class="h-1 bg-primary/5 w-full"></div>
+</div>
+<!-- Item Row 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="p-4 space-y-4">
+<div class="flex gap-4">
+<div class="flex-1">
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 font-body-lg text-body-lg font-semibold text-on-surface" placeholder="Menu Item" type="text" value="Iced Lemon Tea"/>
+</div>
+<div class="w-32 flex items-center gap-1 border-b border-outline-variant focus-within:border-primary">
+<span class="text-outline font-label-sm">IDR</span>
+<input class="w-full bg-transparent border-none p-0 focus:ring-0 text-right font-number-display text-number-display" type="number" value="35000"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-sm text-label-sm text-outline block uppercase">Assigned To</label>
+<div class="flex flex-wrap gap-2">
+<button class="relative w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<div class="absolute inset-0 bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMQwaG7YeEywWqe4WOW_pjrhZZmeFCfvBKE7oD7k0j3yHy7dr-pZwpf8KiQoQduQ0b0RIhGqiBgdaOOxPVs2EnHnc-ILsKht6YoBD7v05SLJJyv8SK-CIwzvMeCgnMYMOmh2MfATsgjVGoZF9qMwvS_jZ7pUubC9E1yxAsjpLz4ePwtKMsV_JvW5LLv6O19sv-8Jd8iAF7tU-cI6tlAmhfIsffhaJfSk66gZiljJ8PWssCVndcRrzrKhM7bLSqDzJ9wC_O-hGHl2o"/>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center border-2 border-dashed border-outline-variant">
+<span class="material-symbols-outlined text-outline">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Item Button -->
+<button class="w-full py-4 border-2 border-dashed border-outline-variant rounded-xl flex items-center justify-center gap-2 text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-headline-md">Add New Item</span>
+</button>
+<!-- Summary Preview -->
+<section class="bg-surface-container-low border border-outline-variant rounded-xl p-4 shadow-inner">
+<div class="flex justify-between items-center mb-2">
+<span class="font-body-md text-on-surface-variant">Subtotal</span>
+<span class="font-number-sm text-number-sm">IDR 485,000</span>
+</div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-body-md text-secondary font-semibold">Tax (PPN 11%)</span>
+<span class="font-number-sm text-number-sm text-secondary">IDR 53,350</span>
+</div>
+<div class="h-px bg-outline-variant my-3"></div>
+<div class="flex justify-between items-center">
+<span class="font-headline-md font-bold text-on-surface">Grand Total</span>
+<span class="font-number-display text-primary font-extrabold">IDR 538,350</span>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar -->
+<div class="fixed bottom-0 w-full bg-surface-container/95 backdrop-blur-md p-container-padding flex gap-4 border-t border-outline-variant z-50">
+<button class="flex-1 h-14 border-2 border-secondary text-secondary rounded-xl font-headline-md hover:bg-secondary/10 active:scale-95 transition-all">
+            Cancel
+        </button>
+<button class="flex-[2] h-14 bg-tertiary-container text-on-tertiary-container rounded-xl font-headline-md shadow-lg shadow-tertiary-container/20 active:scale-95 transition-all flex items-center justify-center gap-2 border border-tertiary">
+            Save Expense
+            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<!-- Floating Micro-interaction (Heritage Success) -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-6 py-3 rounded-full flex items-center gap-2 shadow-xl opacity-0 transition-opacity pointer-events-none z-[60]" id="toast">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">check_circle</span>
+<span class="font-body-md">Expense drafted successfully</span>
+</div>
+<script>
+        // Micro-interaction for the "Save" button
+        const saveBtn = document.querySelector('button.bg-tertiary-container');
+        const toast = document.getElementById('toast');
+        
+        saveBtn.addEventListener('click', () => {
+            const originalHTML = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Saving...';
+            setTimeout(() => {
+                toast.classList.remove('opacity-0');
+                saveBtn.innerHTML = originalHTML;
+                setTimeout(() => {
+                    toast.classList.add('opacity-0');
+                }, 2000);
+            }, 800);
+        });
+
+        // Toggle logic for avatars
+        document.querySelectorAll('button.rounded-full.border-2.overflow-hidden').forEach(avatar => {
+            avatar.addEventListener('click', () => {
+                const isSelected = avatar.classList.contains('border-primary');
+                if (isSelected) {
+                    avatar.classList.remove('border-primary');
+                    avatar.classList.add('border-transparent', 'grayscale');
+                    avatar.querySelector('.absolute')?.remove();
+                } else {
+                    avatar.classList.add('border-primary');
+                    avatar.classList.remove('border-transparent', 'grayscale');
+                    const checkMark = document.createElement('div');
+                    checkMark.className = 'absolute inset-0 bg-primary/20 flex items-center justify-center';
+                    checkMark.innerHTML = '<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: \'FILL\' 1;">check_circle</span>';
+                    avatar.prepend(checkMark);
+                }
+            });
+        });
+    </script>
+</body></html>

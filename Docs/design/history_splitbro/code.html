@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SplitBro - Trip History</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#a7c8ff",
+                    "background": "#f8f9fa",
+                    "surface-container-highest": "#e1e3e4",
+                    "surface-tint": "#3a5f94",
+                    "primary": "#001e40",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#735c00",
+                    "on-secondary-fixed": "#410007",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-bright": "#f8f9fa",
+                    "inverse-surface": "#2e3132",
+                    "primary-container": "#003366",
+                    "outline": "#737780",
+                    "on-tertiary-fixed": "#241a00",
+                    "tertiary-container": "#cca830",
+                    "on-error": "#ffffff",
+                    "secondary": "#bb0027",
+                    "on-primary-fixed": "#001b3c",
+                    "on-primary-container": "#799dd6",
+                    "on-tertiary-container": "#4f3e00",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a",
+                    "surface": "#f8f9fa",
+                    "on-surface": "#191c1d",
+                    "on-secondary-fixed-variant": "#92001c",
+                    "secondary-fixed": "#ffdad8",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-fixed": "#d5e3ff",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "inverse-primary": "#a7c8ff",
+                    "outline-variant": "#c3c6d1",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "on-surface-variant": "#43474f",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-container": "#fffbff",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#ffe088",
+                    "surface-container": "#edeeef",
+                    "secondary-container": "#e0283c",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "on-background": "#191c1d",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-variant": "#e1e3e4",
+                    "on-primary-fixed-variant": "#1f477b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "xxl": "48px",
+                    "md": "16px",
+                    "container-max": "1280px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Hanken Grotesk"],
+                    "title-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .timeline-line {
+            width: 2px;
+            background: linear-gradient(to bottom, #003366 0%, #D4AF37 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-border-subtle dark:border-outline-variant bg-background/95 backdrop-blur-sm flex items-center px-4 h-14 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer transition-colors duration-200 active:scale-95" data-icon="arrow_back">arrow_back</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">SplitBro</h1>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-container-max mx-auto px-4 pt-20">
+<!-- Header Section -->
+<section class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-primary-container">Trip History</h2>
+<p class="font-body-md text-on-surface-variant mt-sm">Review your past adventures and settled expenses.</p>
+</section>
+<!-- Vertical Timeline Container -->
+<div class="relative pl-8 md:pl-12">
+<!-- Continuous Timeline Line -->
+<div class="absolute left-4 md:left-6 top-0 bottom-0 timeline-line opacity-20"></div>
+<!-- History Entries -->
+<div class="space-y-xl">
+<!-- Entry 1 -->
+<div class="relative group">
+<!-- Dot -->
+<div class="absolute -left-[22px] md:-left-[30px] top-4 w-4 h-4 rounded-full bg-tertiary border-4 border-background z-10"></div>
+<div class="glass-card border border-outline-variant rounded-xl p-lg transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md">
+<div class="flex items-start gap-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A cinematic, high-quality photograph of a tropical beach in Bali at sunset, with golden orange light reflecting off the turquoise water and white sand. The scene is framed by lush palm leaves, emphasizing a premium travel experience. The colors are dominated by deep sea blues and warm gold sunset tones to match the corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx-JjcYa3u8KSiAez10RjBGvsEC8Z-dqTePOaxVDUmuLBKNIxlJOMbcp4wWhHGGMyE0sY_7f01LnqnT4NI8ZEAJdijkGVE3q7CJ_nG78Odu3iJS4_-QLLMo3mkek_PzikX36dy8mGpqjN3y0mTVXavNVKR7o7ZXPGn88s5BjA9_GK6L6AIV0kGiFDdJimhR9M_bMUrtLrtvUF9pkFKXhqCSmdiAi-XQeE22cLNV41TvjGfHLIk2ZdAVYAZdmP9U7TbckxCx-rcqCw"/>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-primary">Bali Weekend Blast</h3>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="calendar_month">calendar_month</span>
+                                        Oct 12 - Oct 15, 2023
+                                    </p>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-xs">
+<div class="text-right">
+<p class="font-label-sm uppercase tracking-wider text-outline">Total Spent</p>
+<p class="font-headline-md text-headline-md text-tertiary-container">$2,450.00</p>
+</div>
+<span class="bg-primary/5 text-primary-container px-3 py-1 rounded-full font-label-sm border border-primary/10">
+                                    Settled
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Entry 2 -->
+<div class="relative group">
+<!-- Dot -->
+<div class="absolute -left-[22px] md:-left-[30px] top-4 w-4 h-4 rounded-full bg-outline-variant border-4 border-background z-10"></div>
+<div class="glass-card border border-outline-variant rounded-xl p-lg transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md">
+<div class="flex items-start gap-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional architectural photograph of the Tokyo skyline at dusk, featuring sleek skyscrapers and neon light trails in a sophisticated palette of deep navy, violet, and electric blue. The atmosphere is sharp, modern, and urban, reflecting a premium business or leisure trip setting within a corporate-modern design framework." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd9tzI5PTZJKH6mdb6CQPURbWd0-h9fPvKA-pner4v0bxhhberpaL6j18Lqp4Xpel_nwyjSCJJW9iSWE9L4gJ-c-ovMt47RFLcqppZ9FAUH57lhb1SJntzu9hSquiBddgP3Ai9j-VUbOxjCobJmQJImqhmcdAwqRQKIjK06FPQrI8XLCxp8UNbHi65dAVzhBip0_Q_dVoHtI8kDYILy84K0MRtOmEpn3qq-2MW32g0BJMeEuCxN8zPAyBQTUESdmErX4ZFWCApJIQ"/>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-primary">Tokyo Tech Summit</h3>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="calendar_month">calendar_month</span>
+                                        Sep 04 - Sep 09, 2023
+                                    </p>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-xs">
+<div class="text-right">
+<p class="font-label-sm uppercase tracking-wider text-outline">Total Spent</p>
+<p class="font-headline-md text-headline-md text-tertiary-container">$5,120.50</p>
+</div>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full font-label-sm border border-outline-variant">
+                                    Archived
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Entry 3 -->
+<div class="relative group">
+<!-- Dot -->
+<div class="absolute -left-[22px] md:-left-[30px] top-4 w-4 h-4 rounded-full bg-tertiary border-4 border-background z-10"></div>
+<div class="glass-card border border-outline-variant rounded-xl p-lg transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md">
+<div class="flex items-start gap-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A serene landscape of the Swiss Alps, showing snow-capped peaks against a crisp blue sky with a luxury mountain lodge in the foreground. The lighting is bright and natural, evoking a sense of prestige and tranquility. The color scheme is clean with whites, light blues, and deep navy accents to align with the premium established brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDirdwanFnZD2_fayAKw8NlrQDFfUh8QdsryuWGlpZHzxFxY37FOkUMRTDssCQhpv3CcgOxkHt4lAEcyPmX_QAsQGd2hNbtgYwZW9METJixSUdRkAcnFDsV0OgAebpdUOamI3pgEqn0OmyMfZpXtqSmV_zDQ-y9vCMxdkPHCHjJ4G3XruFtz7s9VsXKGti-TM8M25C6hsn0EU7TpYeBNkK6dwCFW1snlmSZJnspY3iK67pMNMhP1JYMmTA-JN_4SQJGAwA1LFtue4"/>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-primary">Alps Ski Retreat</h3>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="calendar_month">calendar_month</span>
+                                        Feb 14 - Feb 21, 2023
+                                    </p>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-xs">
+<div class="text-right">
+<p class="font-label-sm uppercase tracking-wider text-outline">Total Spent</p>
+<p class="font-headline-md text-headline-md text-tertiary-container">$3,890.00</p>
+</div>
+<span class="bg-primary/5 text-primary-container px-3 py-1 rounded-full font-label-sm border border-primary/10">
+                                    Settled
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Entry 4 (Older, minimal) -->
+<div class="relative group">
+<!-- Dot -->
+<div class="absolute -left-[22px] md:-left-[30px] top-4 w-4 h-4 rounded-full bg-outline-variant border-4 border-background z-10"></div>
+<div class="glass-card border border-outline-variant rounded-xl p-lg transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md">
+<div class="flex items-start gap-md">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-primary">NYC Food Tour</h3>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="calendar_month">calendar_month</span>
+                                        Dec 20 - Dec 23, 2022
+                                    </p>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-xs">
+<div class="text-right">
+<p class="font-label-sm uppercase tracking-wider text-outline">Total Spent</p>
+<p class="font-headline-md text-headline-md text-tertiary-container">$980.25</p>
+</div>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full font-label-sm border border-outline-variant">
+                                    Archived
+                                </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface border-t border-border-subtle dark:border-outline-variant flex justify-around items-center w-full px-4 h-16">
+<!-- Sessions Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 transition-all duration-300 active:scale-90 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-caps text-[10px] uppercase mt-1">Sessions</span>
+</button>
+<!-- History Tab (Active) -->
+<button class="flex flex-col items-center justify-center text-primary-container dark:text-primary-fixed-dim font-bold bg-secondary-container/20 rounded-xl px-4 py-1 transition-all duration-300 active:scale-90">
+<span class="material-symbols-outlined" data-icon="history" data-weight="fill">history</span>
+<span class="font-label-caps text-[10px] uppercase mt-1">History</span>
+</button>
+<!-- Profile Tab -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline p-2 transition-all duration-300 active:scale-90 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-caps text-[10px] uppercase mt-1">Profile</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction: Subtle scroll reveals
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-4');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-4');
+                observer.observe(card);
+            });
+        });
+    </script>
+</body></html>

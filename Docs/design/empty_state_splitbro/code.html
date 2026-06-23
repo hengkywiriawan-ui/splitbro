@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SplitBro - Welcome</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d9dadb",
+                        "surface-container-high": "#e7e8e9",
+                        "background": "#f8f9fa",
+                        "surface-bright": "#f8f9fa",
+                        "tertiary-fixed": "#ffe088",
+                        "on-primary-container": "#799dd6",
+                        "on-background": "#191c1d",
+                        "surface-variant": "#e1e3e4",
+                        "tertiary": "#735c00",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface-variant": "#43474f",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#001e40",
+                        "on-secondary-container": "#fffbff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdad8",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#3a5f94",
+                        "surface": "#f8f9fa",
+                        "on-secondary-fixed-variant": "#92001c",
+                        "inverse-primary": "#a7c8ff",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "outline-variant": "#c3c6d1",
+                        "outline": "#737780",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "on-primary": "#ffffff",
+                        "secondary": "#bb0027",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "tertiary-container": "#cca830",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#410007",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "secondary-container": "#e0283c",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "primary-container": "#003366",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-tertiary-container": "#4f3e00",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-surface": "#191c1d",
+                        "surface-container": "#edeeef",
+                        "primary-fixed": "#d5e3ff",
+                        "on-primary-fixed": "#001b3c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "margin-mobile": "16px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "gutter": "24px",
+                        "base": "8px",
+                        "xxl": "48px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "title-lg": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .premium-shadow {
+            box-shadow: 0 10px 40px -10px rgba(0, 51, 102, 0.08);
+        }
+        .btn-gold {
+            background-color: #D4AF37;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-gold:hover {
+            background-color: #C19B2E;
+            transform: translateY(-1px);
+        }
+        .btn-gold:active {
+            transform: scale(0.96);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-border-subtle dark:border-outline-variant flex items-center px-4 md:px-lg h-14 w-full bg-background/95 backdrop-blur-sm">
+<div class="max-w-container-max mx-auto w-full flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="transition-colors duration-200 active:scale-95 text-on-surface-variant">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">SplitBro</h1>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-primary font-bold font-label-md text-label-md" href="#">Sessions</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors p-2 rounded-lg font-label-md text-label-md" href="#">History</a>
+<a class="text-on-surface-variant hover:bg-surface-container transition-colors p-2 rounded-lg font-label-md text-label-md" href="#">Profile</a>
+</div>
+</div>
+</header>
+<!-- Main Content: Empty State Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center pt-14 pb-20 px-margin-mobile md:px-lg">
+<div class="max-w-4xl w-full flex flex-col items-center text-center">
+<!-- Hero Image Section (Bento Inspired Layout for Empty State) -->
+<div class="relative w-full max-w-lg mb-xl group">
+<!-- Background Decorative Element -->
+<div class="absolute inset-0 bg-primary/5 rounded-full scale-110 blur-3xl opacity-50 group-hover:opacity-70 transition-opacity duration-700"></div>
+<!-- Main Illustration Placeholder -->
+<div class="relative z-10 bg-white p-8 rounded-full premium-shadow border border-gray-100/50 flex items-center justify-center overflow-hidden h-64 w-64 mx-auto">
+<img class="w-48 h-48 object-contain" data-alt="A sophisticated, minimalist 3D illustration of a luxury leather suitcase and a golden fountain pen resting on a marble surface. The lighting is soft and cinematic, highlighting the rich textures of the leather and the metallic sheen of the gold. The color palette is dominated by deep navy blue, warm gold accents, and clean ivory whites, evoking a sense of prestige and heritage travel excellence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe0ZoAS9-pk1Cw1SYUJbBJDaX8ai2Rak7cGK-2vo6jfHNN2sasX7_UblUZZb7QqlW9-UkMhgq18ByjNnQph2wpQqKdvDl6MVgjIdvGettjWq8po7aF5m9E6YjD8GG7mioYN1c99iklSDRkdyuPgxmF8_vDJV1a20QdqPcfjuJCWXuxlXe8yF4CezjFgCvNgWsQXzL5TyE8bmPXRi2zzko1tHmSQSJHssrjy_UqPK-ZKPgPf15LXTD4dcbzOoCzOtdh4t5Hewqf0J8"/>
+</div>
+<!-- Floating Decorative Chips -->
+<div class="absolute -top-4 -right-4 bg-white px-4 py-2 rounded-xl premium-shadow border border-gray-100 flex items-center gap-2 animate-bounce transition-all duration-1000" style="animation-duration: 3s;">
+<span class="material-symbols-outlined text-[#D4AF37]">receipt_long</span>
+<span class="text-label-sm font-label-sm text-primary uppercase tracking-widest">Bills</span>
+</div>
+<div class="absolute -bottom-2 -left-8 bg-white px-4 py-2 rounded-xl premium-shadow border border-gray-100 flex items-center gap-2 animate-bounce transition-all duration-1000" style="animation-duration: 4s; animation-delay: 0.5s;">
+<span class="material-symbols-outlined text-[#D4AF37]">group</span>
+<span class="text-label-sm font-label-sm text-primary uppercase tracking-widest">Friends</span>
+</div>
+</div>
+<!-- Typography & Action -->
+<div class="max-w-md mx-auto">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-sm">
+                    No Trips Yet?
+                </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl">
+                    Start a new session to split your travel expenses easily with friends. Your journey to seamless accounting begins here.
+                </p>
+<div class="flex flex-col sm:flex-row gap-md justify-center items-center">
+<button class="btn-gold w-full sm:w-auto px-xl py-4 rounded-xl text-white font-bold text-body-md flex items-center justify-center gap-2 shadow-lg shadow-tertiary-container/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+                        Create Your First Session
+                    </button>
+<button class="w-full sm:w-auto px-xl py-4 rounded-xl text-primary font-bold text-body-md border border-primary/10 hover:bg-surface-container transition-colors">
+                        View Demo Session
+                    </button>
+</div>
+</div>
+<!-- Helpful Tips (Subtle Card) -->
+<div class="mt-xxl grid grid-cols-1 md:grid-cols-3 gap-lg w-full">
+<div class="p-lg bg-white border border-gray-100 rounded-xl text-left hover:border-[#D4AF37]/30 transition-all premium-shadow">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary">currency_exchange</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-primary mb-xs">Multi-Currency</h3>
+<p class="font-body-md text-label-md text-on-surface-variant">Split costs in any currency with real-time conversion rates.</p>
+</div>
+<div class="p-lg bg-white border border-gray-100 rounded-xl text-left hover:border-[#D4AF37]/30 transition-all premium-shadow">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary">photo_camera</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-primary mb-xs">OCR Receipt Scan</h3>
+<p class="font-body-md text-label-md text-on-surface-variant">Snap a photo and let our AI extract the totals for you.</p>
+</div>
+<div class="p-lg bg-white border border-gray-100 rounded-xl text-left hover:border-[#D4AF37]/30 transition-all premium-shadow">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-primary mb-xs">Smart Settling</h3>
+<p class="font-body-md text-label-md text-on-surface-variant">Minimize transactions with our group-balancing algorithm.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 pb-safe bg-surface border-t border-border-subtle flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center text-primary font-bold bg-secondary-container/20 rounded-xl px-4 py-1 transition-all duration-300 active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label-sm text-[10px] uppercase tracking-tighter">Sessions</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 transition-all duration-300 active:scale-90" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-sm text-[10px] uppercase tracking-tighter">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 transition-all duration-300 active:scale-90" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-[10px] uppercase tracking-tighter">Profile</span>
+</a>
+</nav>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hover effect for cards to add a slight gold border
+            const cards = document.querySelectorAll('.premium-shadow');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-4px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Smooth fade in for elements
+            const mainContent = document.querySelector('main');
+            mainContent.style.opacity = '0';
+            mainContent.style.transform = 'translateY(10px)';
+            mainContent.style.transition = 'all 0.8s ease-out';
+            
+            setTimeout(() => {
+                mainContent.style.opacity = '1';
+                mainContent.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body></html>
