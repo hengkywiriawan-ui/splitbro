@@ -1,6 +1,7 @@
 import type { Session, Restaurant, Item, SharedCost } from "@/lib/types";
 import type { Breakdown } from "@/lib/calc/settlement";
 
+// Local copy — applyTax in settlement.ts is not exported (it's internal to computeSettlement).
 function applyTaxLocal(
   base: number,
   r: { taxIncluded: boolean; taxRate: number }
@@ -67,6 +68,12 @@ export async function downloadExcel(
         Math.round(effectiveTotal / N),
       ]);
     }
+    if (sharedCosts.length > 0) {
+      detailRows.push([], ["Biaya Bersama", "", "", ""]);
+      for (const sc of sharedCosts) {
+        detailRows.push([sc.name, "", Math.round(sc.amount), Math.round(sc.amount / N)]);
+      }
+    }
   } else {
     detailRows.push([
       "Restoran",
@@ -111,5 +118,6 @@ export async function downloadExcel(
   XLSX.utils.book_append_sheet(wb, wsDetail, "Detail");
 
   const date = new Date().toISOString().split("T")[0];
-  XLSX.writeFile(wb, `splitbro-${session.name}-${date}.xlsx`);
+  const safeName = session.name.replace(/[<>:"|?*\\/]/g, "_");
+  XLSX.writeFile(wb, `splitbro-${safeName}-${date}.xlsx`);
 }
