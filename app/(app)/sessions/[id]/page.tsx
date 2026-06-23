@@ -76,6 +76,10 @@ function HubInner({ id }: { id: string }) {
         </Link>
       </div>
 
+      <Link href={`/sessions/${id}/summary`} className="mt-4 block">
+        <Button className="w-full">{t("summary.view")}</Button>
+      </Link>
+
       <div className="mt-6 flex gap-2">
         <Button
           variant="secondary"
