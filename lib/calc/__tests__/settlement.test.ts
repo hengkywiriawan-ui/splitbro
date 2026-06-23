@@ -2,7 +2,10 @@ import { describe, it, expect } from "vitest";
 import { computeSettlement } from "@/lib/calc/settlement";
 import type { Session, Restaurant, Item, SharedCost } from "@/lib/types";
 
-function makeSession(mode: "equal" | "item_based", members: { memberId: string; name: string; deposit?: number }[]): Session {
+function makeSession(
+  mode: "equal" | "item_based",
+  members: { memberId: string; name: string; deposit?: number; isDriver?: boolean }[]
+): Session {
   return {
     id: "s1",
     name: "Test Trip",
@@ -12,8 +15,16 @@ function makeSession(mode: "equal" | "item_based", members: { memberId: string; 
     defaultTaxRate: 11,
     status: "active",
     shareToken: "tok",
+    shareExpiresAt: 0,
     paymentInfo: { bankName: null, accountNumber: null, accountName: null, ewallet: null, note: null },
-    members: members.map((m) => ({ ...m, email: null, phone: null, deposit: m.deposit ?? 0 })),
+    members: members.map((m) => ({
+      memberId: m.memberId,
+      name: m.name,
+      email: null,
+      phone: null,
+      deposit: m.deposit ?? 0,
+      isDriver: m.isDriver ?? false,
+    })),
     createdAt: 0,
     updatedAt: 0,
   };
@@ -165,6 +176,62 @@ describe("computeSettlement — deposit / settlement", () => {
     ]);
     const { totalDeposit } = computeSettlement(session, [], {}, []);
     expect(totalDeposit).toBe(125000);
+  });
+});
+
+describe("computeSettlement — driver flag", () => {
+  it("splits a driver's consumption evenly among non-drivers (equal mode)", () => {
+    const session = makeSession("equal", [
+      { memberId: "m1", name: "Driver", isDriver: true },
+      { memberId: "m2", name: "Bob" },
+      { memberId: "m3", name: "Carol" },
+    ]);
+    const restaurant = makeRestaurant({ taxIncluded: true, totalAmount: 90000 });
+    const { breakdown, grandTotal } = computeSettlement(session, [restaurant], {}, []);
+    // each raw = 30000; driver's 30000 split to 2 non-drivers → +15000 each
+    expect(breakdown.find((b) => b.memberId === "m1")?.consumption).toBe(0);
+    expect(breakdown.find((b) => b.memberId === "m2")?.consumption).toBe(45000);
+    expect(breakdown.find((b) => b.memberId === "m3")?.consumption).toBe(45000);
+    expect(grandTotal).toBe(90000); // money is conserved
+  });
+
+  it("redistributes a driver's item consumption to non-drivers (item mode)", () => {
+    const session = makeSession("item_based", [
+      { memberId: "m1", name: "Driver", isDriver: true },
+      { memberId: "m2", name: "Bob" },
+    ]);
+    const restaurant = makeRestaurant({ taxIncluded: true });
+    const items: Item[] = [
+      { itemId: "i1", sessionId: "s1", restaurantId: "r1", name: "A", price: 40000, assignedTo: ["m1"] },
+      { itemId: "i2", sessionId: "s1", restaurantId: "r1", name: "B", price: 20000, assignedTo: ["m2"] },
+    ];
+    const { breakdown } = computeSettlement(session, [restaurant], { r1: items }, []);
+    expect(breakdown.find((b) => b.memberId === "m1")?.consumption).toBe(0);
+    expect(breakdown.find((b) => b.memberId === "m2")?.consumption).toBe(60000);
+  });
+
+  it("does not redistribute when every member is a driver", () => {
+    const session = makeSession("equal", [
+      { memberId: "m1", name: "D1", isDriver: true },
+      { memberId: "m2", name: "D2", isDriver: true },
+    ]);
+    const restaurant = makeRestaurant({ taxIncluded: true, totalAmount: 100000 });
+    const { breakdown } = computeSettlement(session, [restaurant], {}, []);
+    expect(breakdown.find((b) => b.memberId === "m1")?.consumption).toBe(50000);
+    expect(breakdown.find((b) => b.memberId === "m2")?.consumption).toBe(50000);
+  });
+
+  it("driver still shares shared costs evenly", () => {
+    const session = makeSession("equal", [
+      { memberId: "m1", name: "Driver", isDriver: true },
+      { memberId: "m2", name: "Bob" },
+    ]);
+    const sharedCosts: SharedCost[] = [
+      { costId: "c1", sessionId: "s1", name: "Parkir", amount: 20000 },
+    ];
+    const { breakdown } = computeSettlement(session, [], {}, sharedCosts);
+    expect(breakdown.find((b) => b.memberId === "m1")?.sharedShare).toBe(10000);
+    expect(breakdown.find((b) => b.memberId === "m1")?.netDue).toBe(10000);
   });
 });
 

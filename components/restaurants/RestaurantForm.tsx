@@ -3,6 +3,8 @@
 import { useState } from "react";
 import type { SessionMode } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
+import { applyTax } from "@/lib/calc/settlement";
+import { formatIDR } from "@/lib/format";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -36,6 +38,19 @@ export function RestaurantForm({
     initial?.totalAmount != null ? String(initial.totalAmount) : ""
   );
   const [error, setError] = useState<string | null>(null);
+
+  // Live preview of what each member is actually charged, so the "tax included"
+  // checkbox has a visible effect (equal mode enters the bill total here).
+  const previewTotal = parseFloat(totalAmount);
+  const previewTaxRate = parseInt(taxRate, 10);
+  const hasPreview =
+    sessionMode === "equal" && !Number.isNaN(previewTotal) && previewTotal >= 0;
+  const effectiveTotal = hasPreview
+    ? applyTax(previewTotal, {
+        taxIncluded,
+        taxRate: Number.isNaN(previewTaxRate) ? defaultTaxRate : previewTaxRate,
+      })
+    : 0;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -97,6 +112,15 @@ export function RestaurantForm({
             value={totalAmount}
             onChange={(e) => setTotalAmount(e.target.value)}
           />
+          {hasPreview && (
+            <span className="text-xs text-ink-muted">
+              {taxIncluded
+                ? t("restaurant.preview.taxIncluded")
+                : `${t("restaurant.preview.charged")}: ${formatIDR(effectiveTotal)} (+PPN ${
+                    Number.isNaN(previewTaxRate) ? defaultTaxRate : previewTaxRate
+                  }%)`}
+            </span>
+          )}
         </label>
       )}
       {sessionMode === "item_based" && (

@@ -27,10 +27,11 @@ function PaymentInfoBlock({ session }: { session: Session }) {
 
 function ShareInner({ token }: { token: string }) {
   const { t } = useT();
-  const { session, restaurants, itemsByResto, sharedCosts, loading, notFound } =
+  const { session, restaurants, itemsByResto, sharedCosts, loading, notFound, expired } =
     usePublicSession(token);
 
   if (loading) return null;
+  if (expired) return <p className="p-4">{t("share.expired")}</p>;
   if (notFound || !session) return <p className="p-4">{t("share.notFound")}</p>;
 
   const settlement = computeSettlement(session, restaurants, itemsByResto, sharedCosts);

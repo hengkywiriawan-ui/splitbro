@@ -22,6 +22,7 @@ export interface Member {
   email: string | null;
   phone: string | null;
   deposit: number;
+  isDriver: boolean; // driver eats free; their consumption is split among non-drivers
 }
 
 export interface Session {
@@ -33,11 +34,15 @@ export interface Session {
   defaultTaxRate: number;
   status: SessionStatus;
   shareToken: string;
+  shareExpiresAt: number; // epoch ms; public share link blocked after this
   paymentInfo: PaymentInfo;
   members: Member[];
   createdAt: number; // epoch ms in mock; maps to Firestore Timestamp later
   updatedAt: number;
 }
+
+// Public share link lifetime: 10 weeks (70 days) from session creation.
+export const SHARE_TTL_MS = 70 * 24 * 60 * 60 * 1000;
 
 export interface NewSessionInput {
   name: string;

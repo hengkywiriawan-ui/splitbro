@@ -138,6 +138,12 @@ export const dictionaries = {
     "ocr.draft.confirm": "Tambah Terpilih",
     "sharedCost.totalPool": "Total Biaya Bersama",
     "sharedCost.perMember": "Per Peserta",
+    "member.field.isDriver": "Driver (sopir)",
+    "member.field.isDriver.hint": "Driver makan gratis; konsumsinya dibagi rata ke peserta non-driver.",
+    "member.driver.badge": "Driver",
+    "share.expired": "Link laporan sudah kedaluwarsa (lebih dari 10 minggu).",
+    "restaurant.preview.taxIncluded": "Harga sudah termasuk PPN.",
+    "restaurant.preview.charged": "Dibebankan ke peserta",
   },
   en: {
     "app.title": "SplitBro",
@@ -276,6 +282,12 @@ export const dictionaries = {
     "ocr.draft.confirm": "Add Selected",
     "sharedCost.totalPool": "Total Shared Pool",
     "sharedCost.perMember": "Per Member",
+    "member.field.isDriver": "Driver",
+    "member.field.isDriver.hint": "Driver eats free; their consumption is split evenly among non-drivers.",
+    "member.driver.badge": "Driver",
+    "share.expired": "This report link has expired (older than 10 weeks).",
+    "restaurant.preview.taxIncluded": "Price already includes VAT.",
+    "restaurant.preview.charged": "Charged to members",
   },
 } as const;
 

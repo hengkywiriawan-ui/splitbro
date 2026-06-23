@@ -32,7 +32,7 @@ export function MemberList({
         <Card key={m.memberId}>
           {editingId === m.memberId ? (
             <MemberForm
-              initial={{ name: m.name, email: m.email, phone: m.phone, deposit: m.deposit }}
+              initial={{ name: m.name, email: m.email, phone: m.phone, deposit: m.deposit, isDriver: m.isDriver }}
               onSubmit={(values) => {
                 onUpdate(m.memberId, values);
                 setEditingId(null);
@@ -62,7 +62,14 @@ export function MemberList({
               <div className="flex min-w-0 items-start gap-3">
                 <Avatar name={m.name} />
                 <div className="min-w-0">
-                  <p className="truncate font-semibold">{m.name}</p>
+                  <p className="flex items-center gap-2 truncate font-semibold">
+                    {m.name}
+                    {m.isDriver && (
+                      <span className="rounded-full bg-gold-soft px-2 py-0.5 text-xs font-semibold text-primary">
+                        {t("member.driver.badge")}
+                      </span>
+                    )}
+                  </p>
                   {m.email && <p className="truncate text-sm text-ink-muted">{m.email}</p>}
                   {m.phone && <p className="truncate text-sm text-ink-muted">{m.phone}</p>}
                   <Money amount={m.deposit} tone="primary" className="text-sm" />

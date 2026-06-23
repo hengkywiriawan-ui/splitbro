@@ -13,7 +13,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/config";
-import { EMPTY_PAYMENT_INFO } from "@/lib/types";
+import { EMPTY_PAYMENT_INFO, SHARE_TTL_MS } from "@/lib/types";
 import type { Session, NewSessionInput, SessionPatch } from "@/lib/types";
 import type { SessionRepository } from "../types";
 
@@ -34,6 +34,9 @@ function docToSession(id: string, data: DocumentData): Session {
     defaultTaxRate: (data.defaultTaxRate as number) ?? 11,
     status: (data.status as "active" | "closed") ?? "active",
     shareToken: data.shareToken as string,
+    shareExpiresAt:
+      (data.shareExpiresAt as number) ??
+      ((data.createdAt as { toMillis(): number } | null)?.toMillis() ?? Date.now()) + SHARE_TTL_MS,
     paymentInfo: (data.paymentInfo as Session["paymentInfo"]) ?? EMPTY_PAYMENT_INFO,
     members: (data.members as Session["members"]) ?? [],
     createdAt: (data.createdAt as { toMillis(): number } | null)?.toMillis() ?? Date.now(),
@@ -67,6 +70,7 @@ export const firestoreSessionRepo: SessionRepository = {
       defaultTaxRate: input.defaultTaxRate ?? 11,
       status: "active",
       shareToken: generateShareToken(),
+      shareExpiresAt: Date.now() + SHARE_TTL_MS,
       paymentInfo: EMPTY_PAYMENT_INFO,
       members: [],
       createdAt: serverTimestamp(),

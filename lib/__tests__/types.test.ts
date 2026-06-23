@@ -12,6 +12,7 @@ describe("domain types", () => {
       defaultTaxRate: 11,
       status: "active",
       shareToken: "tok",
+      shareExpiresAt: 1,
       paymentInfo: { bankName: null, accountNumber: null, accountName: null, ewallet: null, note: null },
       members: [],
       createdAt: 1,

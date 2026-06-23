@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Item, Restaurant, Session, SharedCost } from "@/lib/types";
+import { SHARE_TTL_MS } from "@/lib/types";
 import { getSessionRepo } from "@/lib/data/index";
 import { getRestaurantRepo } from "@/lib/data/restaurant-repo/index";
 import { getItemRepo } from "@/lib/data/item-repo/index";
@@ -21,12 +22,17 @@ export function usePublicSession(token: string) {
   const [sharedCosts, setSharedCosts] = useState<SharedCost[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [expired, setExpired] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadViaApi() {
       const res = await fetch(`/api/share/${encodeURIComponent(token)}`);
+      if (res.status === 410) {
+        if (!cancelled) setExpired(true);
+        return;
+      }
       if (!res.ok) {
         if (!cancelled) setNotFound(true);
         return;
@@ -43,6 +49,11 @@ export function usePublicSession(token: string) {
       const found = await getSessionRepo().findByShareToken(token);
       if (!found) {
         if (!cancelled) setNotFound(true);
+        return;
+      }
+      const expiresAt = found.shareExpiresAt || found.createdAt + SHARE_TTL_MS;
+      if (Date.now() > expiresAt) {
+        if (!cancelled) setExpired(true);
         return;
       }
       if (cancelled) return;
@@ -85,5 +96,5 @@ export function usePublicSession(token: string) {
     };
   }, [token]);
 
-  return { session, restaurants, itemsByResto, sharedCosts, loading, notFound };
+  return { session, restaurants, itemsByResto, sharedCosts, loading, notFound, expired };
 }

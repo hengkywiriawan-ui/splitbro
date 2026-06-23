@@ -26,6 +26,7 @@ sessions/{sessionId}
   defaultTaxRate: number,             // default 11
   status: "active" | "closed",
   shareToken: string,                 // token unik untuk laporan publik read-only
+  shareExpiresAt: number,             // epoch ms; laporan publik diblokir setelah ini (default createdAt + 10 minggu)
   paymentInfo: {
     bankName: string | null,
     accountNumber: string | null,
@@ -39,7 +40,8 @@ sessions/{sessionId}
       name: string,                   // wajib
       email: string | null,           // opsional (distribusi laporan)
       phone: string | null,           // opsional (distribusi laporan)
-      deposit: number                 // default 0
+      deposit: number,                // default 0
+      isDriver: boolean               // driver makan gratis; konsumsinya dibagi rata ke peserta non-driver
     }
   ],
   createdAt: Timestamp,

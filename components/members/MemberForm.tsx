@@ -10,6 +10,7 @@ export interface MemberFormValues {
   email: string | null;
   phone: string | null;
   deposit: number;
+  isDriver: boolean;
 }
 
 export function MemberForm({
@@ -26,6 +27,7 @@ export function MemberForm({
   const [email, setEmail] = useState(initial?.email ?? "");
   const [phone, setPhone] = useState(initial?.phone ?? "");
   const [deposit, setDeposit] = useState(String(initial?.deposit ?? 0));
+  const [isDriver, setIsDriver] = useState(initial?.isDriver ?? false);
   const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(e: React.FormEvent) {
@@ -41,6 +43,7 @@ export function MemberForm({
       email: email.trim() || null,
       phone: phone.trim() || null,
       deposit: Number.isNaN(parsed) || parsed < 0 ? 0 : parsed,
+      isDriver,
     });
   }
 
@@ -73,6 +76,16 @@ export function MemberForm({
           aria-label={t("member.field.deposit")}
         />
       </label>
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={isDriver}
+          onChange={(e) => setIsDriver(e.target.checked)}
+          className="h-4 w-4 accent-gold"
+        />
+        <span className="text-sm font-medium">{t("member.field.isDriver")}</span>
+      </label>
+      <p className="text-xs text-ink-muted">{t("member.field.isDriver.hint")}</p>
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex gap-2">
         <Button type="submit">{t("common.save")}</Button>

@@ -7,6 +7,7 @@ const base = (): Omit<Member, "memberId"> => ({
   email: null,
   phone: null,
   deposit: 0,
+  isDriver: false,
 });
 
 describe("addMember", () => {

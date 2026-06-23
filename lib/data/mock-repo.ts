@@ -1,5 +1,5 @@
 import type { Session, NewSessionInput, SessionPatch } from "@/lib/types";
-import { EMPTY_PAYMENT_INFO } from "@/lib/types";
+import { EMPTY_PAYMENT_INFO, SHARE_TTL_MS } from "@/lib/types";
 import type { SessionRepository } from "./types";
 
 const KEY = "splitbro:sessions";
@@ -48,6 +48,7 @@ export const mockRepo: SessionRepository = {
       defaultTaxRate: input.defaultTaxRate ?? 11,
       status: "active",
       shareToken: uid(),
+      shareExpiresAt: now + SHARE_TTL_MS,
       paymentInfo: { ...EMPTY_PAYMENT_INFO },
       members: [],
       createdAt: now,

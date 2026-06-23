@@ -70,6 +70,23 @@ export function computeSettlement(
     }
   }
 
+  // Driver redistribution: a member flagged as driver eats free — their whole
+  // consumption is split evenly among the non-drivers (isDriver !== true).
+  // No-op when there are no non-drivers, so the grand total is never lost.
+  const drivers = session.members.filter((m) => m.isDriver);
+  const nonDrivers = session.members.filter((m) => !m.isDriver);
+  if (drivers.length > 0 && nonDrivers.length > 0) {
+    let driverPot = 0;
+    for (const d of drivers) {
+      driverPot += consumption[d.memberId] ?? 0;
+      consumption[d.memberId] = 0;
+    }
+    const perNonDriver = driverPot / nonDrivers.length;
+    for (const nd of nonDrivers) {
+      consumption[nd.memberId] += perNonDriver;
+    }
+  }
+
   for (const sc of sharedCosts) {
     const perMember = sc.amount / N;
     for (const m of session.members) {

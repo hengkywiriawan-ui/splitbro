@@ -10,6 +10,7 @@ const base: Omit<Session, "id" | "name" | "mode"> = {
   defaultTaxRate: 11,
   status: "active",
   shareToken: "t",
+  shareExpiresAt: 1,
   paymentInfo: { bankName: null, accountNumber: null, accountName: null, ewallet: null, note: null },
   members: [],
   createdAt: 1,

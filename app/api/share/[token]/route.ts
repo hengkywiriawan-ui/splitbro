@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { EMPTY_PAYMENT_INFO } from "@/lib/types";
+import { EMPTY_PAYMENT_INFO, SHARE_TTL_MS } from "@/lib/types";
 import type { Session, Restaurant, Item, SharedCost } from "@/lib/types";
+
+function isShareExpired(session: Pick<Session, "shareExpiresAt" | "createdAt">): boolean {
+  const expiresAt = session.shareExpiresAt || session.createdAt + SHARE_TTL_MS;
+  return Date.now() > expiresAt;
+}
 
 type SharePayload = {
   session: Session;
@@ -57,11 +62,16 @@ async function handleFirebase(
     defaultTaxRate: (sd.defaultTaxRate as number) ?? 11,
     status: (sd.status as "active" | "closed") ?? "active",
     shareToken: sd.shareToken as string,
+    shareExpiresAt: (sd.shareExpiresAt as number) ?? tsToMs(sd.createdAt) + SHARE_TTL_MS,
     paymentInfo: (sd.paymentInfo as Session["paymentInfo"]) ?? EMPTY_PAYMENT_INFO,
     members: (sd.members as Session["members"]) ?? [],
     createdAt: tsToMs(sd.createdAt),
     updatedAt: tsToMs(sd.updatedAt),
   };
+
+  if (isShareExpired(session)) {
+    return NextResponse.json({ error: "expired" }, { status: 410 });
+  }
 
   const [restoSnap, costSnap] = await Promise.all([
     db
@@ -142,6 +152,9 @@ async function handleMock(
 
   const session = await getSessionRepo().findByShareToken(token);
   if (!session) return NextResponse.json({ error: "not found" }, { status: 404 });
+  if (isShareExpired(session)) {
+    return NextResponse.json({ error: "expired" }, { status: 410 });
+  }
 
   const [restaurants, sharedCosts] = await Promise.all([
     getRestaurantRepo().list(session.id),
