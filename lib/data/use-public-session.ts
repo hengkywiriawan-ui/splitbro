@@ -17,30 +17,32 @@ export function usePublicSession(token: string) {
 
   useEffect(() => {
     async function load() {
-      setLoading(true);
-      const found = await getSessionRepo().findByShareToken(token);
-      if (!found) {
-        setNotFound(true);
+      try {
+        setLoading(true);
+        const found = await getSessionRepo().findByShareToken(token);
+        if (!found) {
+          setNotFound(true);
+          return;
+        }
+        setSession(found);
+        const [restos, costs] = await Promise.all([
+          getRestaurantRepo().list(found.id),
+          getSharedCostRepo().list(found.id),
+        ]);
+        setRestaurants(restos);
+        setSharedCosts(costs);
+        if (found.mode === "item_based") {
+          const itemRepo = getItemRepo();
+          const entries = await Promise.all(
+            restos.map(
+              async (r) => [r.restaurantId, await itemRepo.list(found.id, r.restaurantId)] as const
+            )
+          );
+          setItemsByResto(Object.fromEntries(entries));
+        }
+      } finally {
         setLoading(false);
-        return;
       }
-      setSession(found);
-      const [restos, costs] = await Promise.all([
-        getRestaurantRepo().list(found.id),
-        getSharedCostRepo().list(found.id),
-      ]);
-      setRestaurants(restos);
-      setSharedCosts(costs);
-      if (found.mode === "item_based") {
-        const itemRepo = getItemRepo();
-        const entries = await Promise.all(
-          restos.map(
-            async (r) => [r.restaurantId, await itemRepo.list(found.id, r.restaurantId)] as const
-          )
-        );
-        setItemsByResto(Object.fromEntries(entries));
-      }
-      setLoading(false);
     }
     void load();
   }, [token]);
