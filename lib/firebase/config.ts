@@ -28,6 +28,12 @@ let firebaseAppCheck: AppCheck | null = null;
 if (typeof window !== "undefined") {
   const appCheckKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_KEY;
   if (appCheckKey) {
+    // reCAPTCHA rejects localhost (api2/pat 401). In development use an App Check
+    // debug token instead — register the token it logs in the App Check console.
+    if (process.env.NODE_ENV !== "production") {
+      (self as unknown as { FIREBASE_APPCHECK_DEBUG_TOKEN?: boolean }).FIREBASE_APPCHECK_DEBUG_TOKEN =
+        true;
+    }
     firebaseAppCheck = initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(appCheckKey),
       isTokenAutoRefreshEnabled: true,

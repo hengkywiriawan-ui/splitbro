@@ -22,9 +22,6 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          // Allow the Google sign-in popup to talk back to the opener (window.closed
-          // polling) while keeping cross-origin isolation for the rest of the app.
-          { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
           {
             key: "Permissions-Policy",
             value: "camera=(self), microphone=(), geolocation=()",
