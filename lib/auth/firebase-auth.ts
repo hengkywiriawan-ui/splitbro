@@ -1,7 +1,6 @@
 import {
   GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithPopup,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   onAuthStateChanged,
@@ -55,20 +54,13 @@ export const firebaseAuthProvider: AuthProvider = {
   },
 
   async signInWithGoogle() {
-    // Redirect (not popup) — reliable in standalone PWA and avoids COOP issues.
-    // The result is handled by completeRedirect() when the app reloads.
-    await signInWithRedirect(firebaseAuth, new GoogleAuthProvider());
-    return new Promise<User>(() => {}); // page unloads; never resolves here
-  },
-
-  async completeRedirect() {
-    const result = await getRedirectResult(firebaseAuth);
-    if (!result) return;
+    const result = await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
     await upsertUserDoc(result.user);
     if (!(await ensureApproved(result.user.uid))) {
       await firebaseSignOut(firebaseAuth);
       throw new Error("auth/not-approved");
     }
+    return toUser(result.user);
   },
 
   async signInWithEmail(email, password) {
