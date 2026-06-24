@@ -27,13 +27,18 @@ export function LoginForm() {
       setError(null);
       await action();
       router.push("/sessions");
-    } catch {
-      setError(t("login.error"));
+    } catch (e) {
+      setError(
+        e instanceof Error && e.message === "auth/not-approved"
+          ? t("login.pendingApproval")
+          : t("login.error")
+      );
     }
   }
 
   return (
-    <Card className="mx-auto mt-16 w-full max-w-sm">
+    <div className="mx-auto mt-16 w-full max-w-sm">
+      <Card>
       <Image
         src="/icons/logo1.png"
         alt="SplitBro"
@@ -73,6 +78,8 @@ export function LoginForm() {
           {t("login.submit")}
         </Button>
       </form>
-    </Card>
+      </Card>
+      <p className="mt-6 text-center text-xs text-ink-muted">{t("login.footer")}</p>
+    </div>
   );
 }

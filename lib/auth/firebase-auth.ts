@@ -28,9 +28,16 @@ async function upsertUserDoc(fbUser: import("firebase/auth").User): Promise<void
       email: fbUser.email,
       displayName: fbUser.displayName ?? fbUser.email ?? "",
       photoURL: fbUser.photoURL,
+      approved: false, // admin must approve in Firestore before login is allowed
       createdAt: serverTimestamp(),
     });
   }
+}
+
+// Login is gated: only accounts with users/{uid}.approved === true may sign in.
+async function ensureApproved(uid: string): Promise<boolean> {
+  const snap = await getDoc(doc(firestore, "users", uid));
+  return snap.exists() && snap.data().approved === true;
 }
 
 export const firebaseAuthProvider: AuthProvider = {
@@ -50,11 +57,20 @@ export const firebaseAuthProvider: AuthProvider = {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(firebaseAuth, provider);
     await upsertUserDoc(result.user);
+    if (!(await ensureApproved(result.user.uid))) {
+      await firebaseSignOut(firebaseAuth);
+      throw new Error("auth/not-approved");
+    }
     return toUser(result.user);
   },
 
   async signInWithEmail(email, password) {
     const result = await signInWithEmailAndPassword(firebaseAuth, email, password);
+    await upsertUserDoc(result.user);
+    if (!(await ensureApproved(result.user.uid))) {
+      await firebaseSignOut(firebaseAuth);
+      throw new Error("auth/not-approved");
+    }
     return toUser(result.user);
   },
 

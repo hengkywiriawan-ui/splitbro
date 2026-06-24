@@ -11,6 +11,7 @@ users/{userId}
   email: string,
   displayName: string,
   photoURL: string | null,
+  approved: boolean,                  // admin harus set true sebelum akun bisa login
   createdAt: Timestamp
 }
 ```

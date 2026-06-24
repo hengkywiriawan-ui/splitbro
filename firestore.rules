@@ -2,9 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users: own profile only
+    // Users: own profile only. Login is gated on `approved` — a user may create
+    // their profile (approved=false) and edit it, but can NEVER grant their own
+    // approval. Admin flips `approved` to true via the Firebase console / Admin SDK.
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.approved == false;
+      allow update: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.approved == resource.data.approved;
     }
 
     // Sessions: admin (creator) only — public share access goes through server route
