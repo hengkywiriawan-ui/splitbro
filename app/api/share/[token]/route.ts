@@ -42,7 +42,15 @@ export async function GET(
   const backend = process.env.NEXT_PUBLIC_BACKEND ?? "mock";
 
   if (backend === "firebase") {
-    return handleFirebase(token);
+    try {
+      return await handleFirebase(token);
+    } catch (e) {
+      // Most common cause: FIREBASE_SERVICE_ACCOUNT_JSON missing/invalid on the
+      // server. Log the real error (visible in Vercel function logs) and return
+      // a clean 500 instead of an opaque crash.
+      console.error("share route (firebase) failed:", e);
+      return NextResponse.json({ error: "server error" }, { status: 500 });
+    }
   }
   return handleMock(token);
 }
