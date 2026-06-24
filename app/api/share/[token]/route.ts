@@ -49,7 +49,12 @@ export async function GET(
       // server. Log the real error (visible in Vercel function logs) and return
       // a clean 500 instead of an opaque crash.
       console.error("share route (firebase) failed:", e);
-      return NextResponse.json({ error: "server error" }, { status: 500 });
+      // TEMP diagnostic: surface the cause so config errors are visible without
+      // digging Vercel logs. Remove once the share route works.
+      return NextResponse.json(
+        { error: "server error", detail: e instanceof Error ? e.message : String(e) },
+        { status: 500 }
+      );
     }
   }
   return handleMock(token);
