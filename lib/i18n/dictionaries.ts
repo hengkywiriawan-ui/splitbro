@@ -154,6 +154,8 @@ export const dictionaries = {
     "summary.linkExpiredHint": "Link sudah kedaluwarsa. Generate link baru untuk membagikan lagi.",
     "share.validUntil": "Berlaku sampai",
     "summary.copyManual": "Salin manual link di bawah:",
+    "restaurant.field.participants": "Peserta yang ikut",
+    "restaurant.field.participants.hint": "Hanya peserta tercentang yang ikut menanggung tagihan restoran ini.",
   },
   en: {
     "app.title": "SplitBro",
@@ -308,6 +310,8 @@ export const dictionaries = {
     "summary.linkExpiredHint": "Link has expired. Generate a new link to share again.",
     "share.validUntil": "Valid until",
     "summary.copyManual": "Copy the link manually below:",
+    "restaurant.field.participants": "Attendees",
+    "restaurant.field.participants.hint": "Only checked members share this restaurant's bill.",
   },
 } as const;
 

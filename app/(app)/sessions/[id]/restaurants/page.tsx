@@ -30,6 +30,7 @@ function RestaurantsInner({ id }: { id: string }) {
         sessionMode={session.mode}
         defaultTaxRate={session.defaultTaxRate}
         sessionId={id}
+        members={session.members}
         onUpdate={async (restaurantId, values) => {
           await update(restaurantId, values);
         }}
@@ -43,6 +44,7 @@ function RestaurantsInner({ id }: { id: string }) {
           <RestaurantForm
             sessionMode={session.mode}
             defaultTaxRate={session.defaultTaxRate}
+            members={session.members}
             onSubmit={async (values) => {
               await add(values);
               setAdding(false);

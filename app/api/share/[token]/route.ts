@@ -99,6 +99,7 @@ async function handleFirebase(
       taxIncluded: (r.taxIncluded as boolean) ?? false,
       taxRate: (r.taxRate as number) ?? 11,
       totalAmount: (r.totalAmount as number | null) ?? null,
+      participantIds: (r.participantIds as string[]) ?? [],
     };
   });
 

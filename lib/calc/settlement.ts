@@ -41,8 +41,15 @@ export function computeSettlement(
     for (const r of restaurants) {
       if (r.totalAmount == null) continue;
       const effectiveTotal = applyTax(r.totalAmount, r);
-      const sharePerMember = effectiveTotal / N;
-      for (const m of session.members) {
+      // Split among only the members who joined this restaurant. Empty/missing
+      // participantIds means everyone (backward compatible with old data).
+      const participants =
+        r.participantIds && r.participantIds.length > 0
+          ? session.members.filter((m) => r.participantIds.includes(m.memberId))
+          : session.members;
+      if (participants.length === 0) continue;
+      const sharePerMember = effectiveTotal / participants.length;
+      for (const m of participants) {
         consumption[m.memberId] += sharePerMember;
       }
     }

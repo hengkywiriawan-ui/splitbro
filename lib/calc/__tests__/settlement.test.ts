@@ -40,6 +40,7 @@ function makeRestaurant(overrides: Partial<Restaurant> = {}): Restaurant {
     taxIncluded: false,
     taxRate: 11,
     totalAmount: null,
+    participantIds: [],
     ...overrides,
   };
 }
@@ -176,6 +177,36 @@ describe("computeSettlement — deposit / settlement", () => {
     ]);
     const { totalDeposit } = computeSettlement(session, [], {}, []);
     expect(totalDeposit).toBe(125000);
+  });
+});
+
+describe("computeSettlement — restaurant participants (equal mode)", () => {
+  it("splits only among the restaurant's participants", () => {
+    const session = makeSession("equal", [
+      { memberId: "m1", name: "A" },
+      { memberId: "m2", name: "B" },
+      { memberId: "m3", name: "C" },
+    ]);
+    const restaurant = makeRestaurant({
+      taxIncluded: true,
+      totalAmount: 300000,
+      participantIds: ["m1", "m2"],
+    });
+    const { breakdown } = computeSettlement(session, [restaurant], {}, []);
+    expect(breakdown.find((b) => b.memberId === "m1")?.consumption).toBe(150000);
+    expect(breakdown.find((b) => b.memberId === "m2")?.consumption).toBe(150000);
+    expect(breakdown.find((b) => b.memberId === "m3")?.consumption).toBe(0);
+  });
+
+  it("treats empty participantIds as all members", () => {
+    const session = makeSession("equal", [
+      { memberId: "m1", name: "A" },
+      { memberId: "m2", name: "B" },
+    ]);
+    const restaurant = makeRestaurant({ taxIncluded: true, totalAmount: 100000, participantIds: [] });
+    const { breakdown } = computeSettlement(session, [restaurant], {}, []);
+    expect(breakdown[0].consumption).toBe(50000);
+    expect(breakdown[1].consumption).toBe(50000);
   });
 });
 

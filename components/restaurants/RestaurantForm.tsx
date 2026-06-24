@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { SessionMode } from "@/lib/types";
+import type { Member, SessionMode } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
 import { applyTax } from "@/lib/calc/settlement";
 import { formatIDR } from "@/lib/format";
@@ -14,18 +14,21 @@ export interface RestaurantFormValues {
   taxIncluded: boolean;
   taxRate: number;
   totalAmount: number | null;
+  participantIds: string[];
 }
 
 export function RestaurantForm({
   initial,
   sessionMode,
   defaultTaxRate,
+  members,
   onSubmit,
   onCancel,
 }: {
   initial?: Partial<RestaurantFormValues>;
   sessionMode: SessionMode;
   defaultTaxRate: number;
+  members: Member[];
   onSubmit: (values: RestaurantFormValues) => void;
   onCancel?: () => void;
 }) {
@@ -37,7 +40,25 @@ export function RestaurantForm({
   const [totalAmount, setTotalAmount] = useState(
     initial?.totalAmount != null ? String(initial.totalAmount) : ""
   );
+  const allIds = members.map((m) => m.memberId);
+  const [participants, setParticipants] = useState<Set<string>>(
+    () =>
+      new Set(
+        initial?.participantIds && initial.participantIds.length > 0
+          ? initial.participantIds
+          : allIds
+      )
+  );
   const [error, setError] = useState<string | null>(null);
+
+  function toggleParticipant(memberId: string) {
+    setParticipants((prev) => {
+      const next = new Set(prev);
+      if (next.has(memberId)) next.delete(memberId);
+      else next.add(memberId);
+      return next;
+    });
+  }
 
   // Live preview of what each member is actually charged, so the "tax included"
   // checkbox has a visible effect (equal mode enters the bill total here).
@@ -70,6 +91,12 @@ export function RestaurantForm({
         sessionMode === "equal" && !Number.isNaN(parsedTotal) && parsedTotal >= 0
           ? parsedTotal
           : null,
+      // Store [] when everyone is selected (= all, and auto-includes members
+      // added later); otherwise the explicit attendee list.
+      participantIds: (() => {
+        const selected = allIds.filter((id) => participants.has(id));
+        return selected.length === allIds.length ? [] : selected;
+      })(),
     });
   }
 
@@ -122,6 +149,25 @@ export function RestaurantForm({
             </span>
           )}
         </label>
+      )}
+      {sessionMode === "equal" && members.length > 0 && (
+        <div className="flex flex-col gap-1">
+          <span className="text-sm font-medium">{t("restaurant.field.participants")}</span>
+          <div className="flex flex-col gap-1.5 rounded-lg border border-border-subtle p-2">
+            {members.map((m) => (
+              <label key={m.memberId} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={participants.has(m.memberId)}
+                  onChange={() => toggleParticipant(m.memberId)}
+                  className="h-4 w-4 accent-gold"
+                />
+                <span className="text-sm">{m.name}</span>
+              </label>
+            ))}
+          </div>
+          <span className="text-xs text-ink-muted">{t("restaurant.field.participants.hint")}</span>
+        </div>
       )}
       {sessionMode === "item_based" && (
         <div className="rounded-lg bg-gray-100 p-3 text-sm text-gray-500">

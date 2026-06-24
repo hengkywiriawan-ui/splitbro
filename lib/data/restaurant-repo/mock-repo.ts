@@ -40,6 +40,7 @@ export const mockRestaurantRepo: RestaurantRepository = {
       taxIncluded: input.taxIncluded ?? false,
       taxRate: input.taxRate ?? 11,
       totalAmount: input.totalAmount ?? null,
+      participantIds: input.participantIds ?? [],
     };
     writeAll(input.sessionId, [...all, restaurant]);
     return restaurant;

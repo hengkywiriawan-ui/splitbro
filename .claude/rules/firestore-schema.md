@@ -59,6 +59,7 @@ sessions/{sessionId}/restaurants/{restaurantId}
   taxIncluded: boolean,               // true = harga sudah termasuk PPN
   taxRate: number,                    // % PPN, dipakai jika taxIncluded=false
   totalAmount: number | null,         // HANYA mode equal
+  participantIds: string[],           // HANYA mode equal: member yang ikut; kosong = semua
   createdAt: Timestamp
 }
 ```

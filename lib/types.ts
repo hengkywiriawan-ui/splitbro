@@ -70,6 +70,7 @@ export interface Restaurant {
   taxIncluded: boolean;
   taxRate: number;
   totalAmount: number | null;
+  participantIds: string[]; // equal mode: members who joined; empty = all members
 }
 
 export interface NewRestaurantInput {
@@ -80,6 +81,7 @@ export interface NewRestaurantInput {
   taxIncluded?: boolean;
   taxRate?: number;
   totalAmount?: number | null;
+  participantIds?: string[];
 }
 
 export type RestaurantPatch = Partial<Omit<Restaurant, "restaurantId" | "sessionId">>;

@@ -40,6 +40,7 @@ describe("Restaurant types", () => {
       taxIncluded: false,
       taxRate: 11,
       totalAmount: 450000,
+      participantIds: [],
     };
     expect(r.restaurantId).toBe("r1");
     expect(r.totalAmount).toBe(450000);

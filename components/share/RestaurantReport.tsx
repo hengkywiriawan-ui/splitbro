@@ -85,8 +85,12 @@ function RestaurantRow({
   onToggle: () => void;
 }) {
   const { t } = useT();
-  const totals = computeTotals(restaurant, items, mode, members.length);
   const nameById = new Map(members.map((m) => [m.memberId, m.name]));
+  const participantCount =
+    mode === "equal" && restaurant.participantIds.length > 0
+      ? restaurant.participantIds.length
+      : members.length;
+  const totals = computeTotals(restaurant, items, mode, participantCount);
 
   return (
     <div className="border-b border-border-subtle last:border-b-0">
@@ -142,6 +146,11 @@ function RestaurantRow({
                 <span>{t("export.col.perPerson")}</span>
                 <span>{formatIDR(totals.perPerson)}</span>
               </div>
+            )}
+            {mode === "equal" && restaurant.participantIds.length > 0 && (
+              <p className="text-xs text-ink-muted">
+                {restaurant.participantIds.map((id) => nameById.get(id) ?? "?").join(", ")}
+              </p>
             )}
           </div>
         </div>

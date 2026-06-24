@@ -33,6 +33,7 @@ function docToRestaurant(id: string, sessionId: string, data: DocumentData): Res
     taxIncluded: (data.taxIncluded as boolean) ?? false,
     taxRate: (data.taxRate as number) ?? 11,
     totalAmount: (data.totalAmount as number | null) ?? null,
+    participantIds: (data.participantIds as string[]) ?? [],
   };
 }
 
@@ -60,6 +61,7 @@ export const firestoreRestaurantRepo: RestaurantRepository = {
       taxIncluded: input.taxIncluded ?? false,
       taxRate: input.taxRate ?? 11,
       totalAmount: input.totalAmount ?? null,
+      participantIds: input.participantIds ?? [],
       createdAt: serverTimestamp(),
     });
     const newSnap = await getDoc(docRef);

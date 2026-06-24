@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Restaurant, SessionMode } from "@/lib/types";
+import type { Member, Restaurant, SessionMode } from "@/lib/types";
 import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -14,6 +14,7 @@ export function RestaurantList({
   sessionMode,
   defaultTaxRate,
   sessionId,
+  members,
   onUpdate,
   onRemove,
 }: {
@@ -21,6 +22,7 @@ export function RestaurantList({
   sessionMode: SessionMode;
   defaultTaxRate: number;
   sessionId: string;
+  members: Member[];
   onUpdate: (restaurantId: string, values: RestaurantFormValues) => void;
   onRemove: (restaurantId: string) => void;
 }) {
@@ -44,9 +46,11 @@ export function RestaurantList({
                 taxIncluded: r.taxIncluded,
                 taxRate: r.taxRate,
                 totalAmount: r.totalAmount,
+                participantIds: r.participantIds,
               }}
               sessionMode={sessionMode}
               defaultTaxRate={defaultTaxRate}
+              members={members}
               onSubmit={(values) => {
                 onUpdate(r.restaurantId, values);
                 setEditingId(null);
