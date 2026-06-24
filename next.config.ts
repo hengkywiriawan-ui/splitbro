@@ -14,6 +14,9 @@ const withPWA = withPWAInit({
 
 const nextConfig: NextConfig = {
   turbopack: {},
+  // firebase-admin pulls in CJS/ESM-mixed deps (jwks-rsa -> jose); keep it
+  // external so Node resolves it natively instead of the bundler choking on it.
+  serverExternalPackages: ["firebase-admin"],
   async headers() {
     return [
       {

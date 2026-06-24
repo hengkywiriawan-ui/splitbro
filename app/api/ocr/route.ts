@@ -23,7 +23,7 @@ async function isAuthorized(req: NextRequest): Promise<boolean> {
   const match = (req.headers.get("authorization") ?? "").match(/^Bearer (.+)$/);
   if (!match) return false;
   try {
-    const { getAdminAuth } = await import("@/lib/firebase/admin");
+    const { getAdminAuth } = await import("@/lib/firebase/admin-auth");
     await getAdminAuth().verifyIdToken(match[1]);
     return true;
   } catch {

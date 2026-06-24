@@ -1,8 +1,10 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { getAuth } from "firebase-admin/auth";
 
-function getAdminApp(): App {
+// Keep this module free of firebase-admin/auth: that pulls in jwks-rsa -> jose
+// (ESM-only) which crashes (ERR_REQUIRE_ESM) when bundled. The public share
+// route only needs Firestore. Auth lives in admin-auth.ts.
+export function getAdminApp(): App {
   const existing = getApps().find((a) => a.name === "[DEFAULT]");
   if (existing) return existing;
 
@@ -16,8 +18,4 @@ function getAdminApp(): App {
 
 export function getAdminDb() {
   return getFirestore(getAdminApp());
-}
-
-export function getAdminAuth() {
-  return getAuth(getAdminApp());
 }
