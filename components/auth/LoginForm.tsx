@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/Input";
 import { Card } from "@/components/ui/Card";
 
 export function LoginForm() {
-  const { user, signInGoogle, signInEmail } = useAuth();
+  const { user, authError, signInGoogle, signInEmail } = useAuth();
   const { t } = useT();
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -21,6 +21,11 @@ export function LoginForm() {
   useEffect(() => {
     if (user) router.replace("/sessions");
   }, [user, router]);
+
+  // Surface a failed redirect sign-in (e.g. account not yet approved).
+  useEffect(() => {
+    if (authError === "auth/not-approved") setError(t("login.pendingApproval"));
+  }, [authError, t]);
 
   async function go(action: () => Promise<void>) {
     try {
