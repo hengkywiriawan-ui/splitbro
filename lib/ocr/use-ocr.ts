@@ -37,7 +37,21 @@ export function useOcr() {
 
       const form = new FormData();
       form.append("image", file);
-      const res = await fetch("/api/ocr", { method: "POST", body: form });
+
+      // Attach the Firebase ID token so the server can authorize the call and
+      // protect the OCR API key from anonymous abuse (firebase backend only).
+      const headers: Record<string, string> = {};
+      if ((process.env.NEXT_PUBLIC_BACKEND ?? "mock") === "firebase") {
+        try {
+          const { firebaseAuth } = await import("@/lib/firebase/config");
+          const token = await firebaseAuth.currentUser?.getIdToken();
+          if (token) headers.Authorization = `Bearer ${token}`;
+        } catch {
+          // no token available; the request will be rejected server-side
+        }
+      }
+
+      const res = await fetch("/api/ocr", { method: "POST", body: form, headers });
       if (!res.ok) throw new Error("ocr request failed");
 
       const data = (await res.json()) as { items?: ParsedItem[] };

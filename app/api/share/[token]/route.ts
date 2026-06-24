@@ -1,10 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { EMPTY_PAYMENT_INFO, SHARE_TTL_MS } from "@/lib/types";
-import type { Session, Restaurant, Item, SharedCost } from "@/lib/types";
+import type { Session, Member, Restaurant, Item, SharedCost } from "@/lib/types";
 
 function isShareExpired(session: Pick<Session, "shareExpiresAt" | "createdAt">): boolean {
   const expiresAt = session.shareExpiresAt || session.createdAt + SHARE_TTL_MS;
   return Date.now() > expiresAt;
+}
+
+// The public report only needs names and amounts — never leak member PII
+// (email/phone) to anyone holding the share link.
+function sanitizeMembers(members: Member[]): Member[] {
+  return members.map((m) => ({
+    memberId: m.memberId,
+    name: m.name,
+    deposit: m.deposit,
+    isDriver: m.isDriver,
+    email: null,
+    phone: null,
+  }));
 }
 
 type SharePayload = {
@@ -64,7 +77,7 @@ async function handleFirebase(
     shareToken: sd.shareToken as string,
     shareExpiresAt: (sd.shareExpiresAt as number) ?? tsToMs(sd.createdAt) + SHARE_TTL_MS,
     paymentInfo: (sd.paymentInfo as Session["paymentInfo"]) ?? EMPTY_PAYMENT_INFO,
-    members: (sd.members as Session["members"]) ?? [],
+    members: sanitizeMembers((sd.members as Member[]) ?? []),
     createdAt: tsToMs(sd.createdAt),
     updatedAt: tsToMs(sd.updatedAt),
   };
@@ -140,7 +153,12 @@ async function handleFirebase(
     );
   }
 
-  return NextResponse.json({ session, restaurants, itemsByResto, sharedCosts });
+  return NextResponse.json({
+    session: { ...session, members: sanitizeMembers(session.members) },
+    restaurants,
+    itemsByResto,
+    sharedCosts,
+  });
 }
 
 async function handleMock(
@@ -174,5 +192,10 @@ async function handleMock(
     Object.assign(itemsByResto, Object.fromEntries(entries));
   }
 
-  return NextResponse.json({ session, restaurants, itemsByResto, sharedCosts });
+  return NextResponse.json({
+    session: { ...session, members: sanitizeMembers(session.members) },
+    restaurants,
+    itemsByResto,
+    sharedCosts,
+  });
 }

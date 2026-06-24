@@ -16,7 +16,8 @@ service cloud.firestore {
     // Sessions: admin (creator) only — public share access goes through server route
     match /sessions/{sessionId} {
       allow create: if request.auth != null
-        && request.auth.uid == request.resource.data.adminId;
+        && request.auth.uid == request.resource.data.adminId
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.approved == true;
       allow read, update, delete: if request.auth != null
         && request.auth.uid == resource.data.adminId;
 
