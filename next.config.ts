@@ -22,6 +22,9 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          // Required for the Google sign-in popup: lets the opener poll the popup's
+          // window.closed across the cross-origin OAuth navigation.
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
           {
             key: "Permissions-Policy",
             value: "camera=(self), microphone=(), geolocation=()",
