@@ -1,7 +1,6 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
-import { getAppCheck } from "firebase-admin/app-check";
 
 function getAdminApp(): App {
   const existing = getApps().find((a) => a.name === "[DEFAULT]");
@@ -21,8 +20,4 @@ export function getAdminDb() {
 
 export function getAdminAuth() {
   return getAuth(getAdminApp());
-}
-
-export function getAdminAppCheck() {
-  return getAppCheck(getAdminApp());
 }
