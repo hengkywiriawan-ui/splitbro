@@ -49,6 +49,18 @@ export function useOcr() {
         } catch {
           // no token available; the request will be rejected server-side
         }
+        if (process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_KEY) {
+          try {
+            const { firebaseAppCheck } = await import("@/lib/firebase/config");
+            if (firebaseAppCheck) {
+              const { getToken } = await import("firebase/app-check");
+              const ac = await getToken(firebaseAppCheck, false);
+              if (ac?.token) headers["X-Firebase-AppCheck"] = ac.token;
+            }
+          } catch {
+            // App Check token unavailable; server rejects if enforcement is on
+          }
+        }
       }
 
       const res = await fetch("/api/ocr", { method: "POST", body: form, headers });

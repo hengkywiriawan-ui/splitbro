@@ -31,6 +31,21 @@ async function isAuthorized(req: NextRequest): Promise<boolean> {
   }
 }
 
+// App Check (optional, defense-in-depth): if a reCAPTCHA key is configured, the
+// client must also send a valid App Check token, blocking calls from outside the app.
+async function isAppCheckValid(req: NextRequest): Promise<boolean> {
+  if (!process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_KEY) return true;
+  const token = req.headers.get("x-firebase-appcheck");
+  if (!token) return false;
+  try {
+    const { getAdminAppCheck } = await import("@/lib/firebase/admin");
+    await getAdminAppCheck().verifyToken(token);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const PROMPT = `This image is a receipt. Extract ONLY the orderable line items (food, drinks, products).
 
 For each item return:
@@ -56,7 +71,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "ocr not configured" }, { status: 500 });
   }
 
-  if (!(await isAuthorized(req))) {
+  if (!(await isAuthorized(req)) || !(await isAppCheckValid(req))) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
