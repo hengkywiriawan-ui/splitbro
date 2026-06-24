@@ -28,10 +28,13 @@ export function LoginForm() {
       await action();
       router.push("/sessions");
     } catch (e) {
+      const code =
+        e instanceof Error ? ((e as { code?: string }).code ?? e.message) : String(e);
+      console.error("sign-in failed:", e);
       setError(
-        e instanceof Error && e.message === "auth/not-approved"
+        code === "auth/not-approved"
           ? t("login.pendingApproval")
-          : t("login.error")
+          : `${t("login.error")} (${code})`
       );
     }
   }
