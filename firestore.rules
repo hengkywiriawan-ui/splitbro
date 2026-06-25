@@ -2,13 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users: own profile only. Login is gated on `approved` — a user may create
-    // their profile (approved=false) and edit it, but can NEVER grant their own
-    // approval. Admin flips `approved` to true via the Firebase console / Admin SDK.
+    // Users: own profile only. Login is gated on `approved`, but the gate is OPEN
+    // by default — a new profile is created with approved=true so the user can log
+    // in immediately. Admin REVOKES access by setting approved=false in the Firebase
+    // console / Admin SDK; the user can never change `approved` on their own (update
+    // rule below pins it), so a revoked user cannot flip themselves back.
     match /users/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null && request.auth.uid == userId
-        && request.resource.data.approved == false;
+        && request.resource.data.approved == true;
       allow update: if request.auth != null && request.auth.uid == userId
         && request.resource.data.approved == resource.data.approved;
     }

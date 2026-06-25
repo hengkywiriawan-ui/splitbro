@@ -28,7 +28,7 @@ async function upsertUserDoc(fbUser: import("firebase/auth").User): Promise<void
       email: fbUser.email,
       displayName: fbUser.displayName ?? fbUser.email ?? "",
       photoURL: fbUser.photoURL,
-      approved: false, // admin must approve in Firestore before login is allowed
+      approved: true, // open by default; admin revokes a user by setting false in Firestore
       createdAt: serverTimestamp(),
     });
   }

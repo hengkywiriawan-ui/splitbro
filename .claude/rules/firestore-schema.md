@@ -11,7 +11,7 @@ users/{userId}
   email: string,
   displayName: string,
   photoURL: string | null,
-  approved: boolean,                  // admin harus set true sebelum akun bisa login
+  approved: boolean,                  // default true saat daftar (gate terbuka); admin set false untuk blokir akun
   createdAt: Timestamp
 }
 ```
